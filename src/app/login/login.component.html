@@ -1,0 +1,31 @@
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">    
+      <div fxLayout="row" fxLayoutAlign="center center" >
+      <mat-card class="example-card" fxFlex="30%"  fxFlex.xs="100%">
+        <mat-card-header>        
+          <mat-card-title>ERP STORE</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field style="width: 100%">
+            <input matInput placeholder="Usuario" required formControlName="userName">
+            <mat-error>
+              Ingrese alguna valor
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field style="width: 100%">
+            <input matInput type="password" placeholder="Clave" required formControlName="password">
+            <mat-error>
+              Ingrese alguna valor
+            </mat-error>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" style="width: 100%" type="submit" [disabled]="!form.valid">
+            ENTRAR
+          </button>
+        </mat-card-actions>
+      </mat-card>
+     
+    </div>
+    </form>
+    <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing> 

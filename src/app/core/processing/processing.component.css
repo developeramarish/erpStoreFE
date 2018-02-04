@@ -1,0 +1,12 @@
+.processing {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width:100%;        /* hacemos que ocupe toda la pantalla a cualquier resolución*/
+    filter:alpha(opacity=65);   
+   -moz-opacity:65;   
+    opacity:0.65;
+    background:#999;
+    z-index: 5200;
+}
