@@ -8,26 +8,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TokenInterceptor } from './core/class/token.interceptor'
 
 import { MainComponent } from './core/main/main.component';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './core/home/home.component';
-import { ProcessingComponent } from './core/processing/processing.component';
+import { CoreModule } from './core/core.module';
+import { MainModule } from './core/main/main.module';
+import { SharedModule } from './core/shared/shared.module';
 
-const routes: Routes = [
-  {
-    path:'',
-    component: LoginComponent
-  },
-  {
-    path:'home',
-    component: HomeComponent
-  }
-]
+
 @NgModule({
   declarations: [
-    MainComponent,
-    LoginComponent,
-    HomeComponent,
-    ProcessingComponent
+    
   ],
   imports: [
     BrowserAnimationsModule,
@@ -39,7 +27,10 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes)
+    CoreModule,
+    MainModule,
+    SharedModule
+    
   ],
   providers: 
   [

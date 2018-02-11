@@ -1,0 +1,38 @@
+  <mat-toolbar color="primary">
+   
+      <a mat-button [matMenuTriggerFor]="menuSale">Ventas</a>
+      <mat-menu #menuSale="matMenu">
+        <button mat-menu-item (click)="redirect('/home/saleMaintenance')">Nuevo</button>
+        <button mat-menu-item (click)="redirect('/home/saleSearch')">Buscar</button>
+      </mat-menu>
+      <button mat-button [matMenuTriggerFor]="menuCash">Caja</button>
+      <mat-menu #menuCash="matMenu">
+        <button mat-menu-item (click)="redirect('/home/cashSearch')">Caja</button>
+        <button mat-menu-item (click)="redirect('/home/movementCash')">Movimento de caja</button>
+        <button mat-menu-item (click)="redirect('/home/colletSale')">Cobrar venta</button>
+      </mat-menu>
+      <button mat-button [matMenuTriggerFor]="menuWarehouse">Almacén</button>
+      <mat-menu #menuWarehouse="matMenu">
+        <button mat-menu-item (click)="redirect('/home/entryMaintenance')">Ingreso de producto</button>
+        <button mat-menu-item (click)="redirect('/home/decreaseSearch')">Merma</button>
+      </mat-menu>
+      <button mat-button [matMenuTriggerFor]="menuMaintenance">Mantenimientos</button>
+      <mat-menu #menuMaintenance="matMenu">
+        <button mat-menu-item (click)="redirect('/home/categorySearch')">Categoria</button>
+        <button mat-menu-item (click)="redirect('/home/brandSearch')">Marca</button>
+        <button mat-menu-item (click)="redirect('/home/productSearch')">Producto</button>
+        <button mat-menu-item (click)="redirect('/home/supplierSearch')">Proveedor</button>
+        <button mat-menu-item (click)="redirect('/home/storeSearch')">Tienda</button>
+        <button mat-menu-item (click)="redirect('/home/unitSearch')">Unidad</button>
+      </mat-menu>
+      <button mat-button [matMenuTriggerFor]="menuConfiguration">Configuración</button>
+      <mat-menu #menuConfiguration="matMenu">
+        <button mat-menu-item (click)="redirect('/home/globalParametersMaintenance')">Parametros Globales</button>
+        <button mat-menu-item (click)="redirect('/home/userSearch')">Usuario</button>
+        <button mat-menu-item (click)="redirect('/home/profileSearch')">Perfil</button>
+        <button mat-menu-item (click)="redirect('/home/changePasswordMaintenance')">Cambiar clave</button>
+      </mat-menu>
+      <div style="flex: 1 1 auto"></div>
+      <a mat-icon-button (click)="redirect('')"><mat-icon class="example-icon">exit_to_app</mat-icon></a>
+
+  </mat-toolbar>

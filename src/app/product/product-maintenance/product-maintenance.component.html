@@ -1,0 +1,171 @@
+<h3 mat-dialog-title color="primary">PRODUCTO-{{title}}</h3>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-horizontal-stepper linear = true #stepper="matHorizontalStepper">
+      <mat-step>
+        <ng-template matStepLabel>DATOS GENERALES DE PRODUCTO</ng-template>
+        <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
+          <div fxFlex="50%" fxLayout.xs="100%">
+            <mat-form-field style="width: 80%">
+              <mat-select placeholder="Categoria" formControlName="idCategory" name="Category" required>
+                <mat-option *ngFor="let Category of listCategory" [value]="Category.idCategory">
+                  {{Category.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error> Ingrese algún valor</mat-error>
+            </mat-form-field>
+            <div *ngIf="!disabledEdit">
+              <button mat-icon-button (click)="getCategory(true)" matTooltip="Actualizar Categorias" >
+                <mat-icon>refresh</mat-icon>
+              </button>
+              <button mat-icon-button (click)="addCategory()" matTooltip="Agregar Categoria" >
+                <mat-icon>plus_one</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxFlex="50%" fxLayout.xs="100%">
+            <mat-form-field style="width: 80%">
+              <mat-select placeholder="Marca" formControlName="idBrand" name="Brand" required>
+                <mat-option *ngFor="let Brand of listBrand" [value]="Brand.idBrand">
+                  {{Brand.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error> Ingrese algún valor </mat-error>
+            </mat-form-field>
+            <div *ngIf="!disabledEdit">
+              <button mat-icon-button (click)="getBrand(true)" matTooltip="Actualizar Marcas" >
+                <mat-icon>refresh</mat-icon>
+              </button>
+              <button mat-icon-button (click)="addBrand()" matTooltip="Agregar Marca" >
+                <mat-icon>plus_one</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
+          <div fxFlex="50%" fxLayout.xs="100%">
+            <mat-form-field style="width: 90%">
+              <input matInput placeholder="Nombre" formControlName="name" required>
+            </mat-form-field>
+            <mat-error *ngIf="form.controls['name'].hasError('name')">
+              Ingrese algún valor
+            </mat-error>
+          </div>  
+          <div fxFlex="50%" fxLayout.xs="100%">
+            <mat-form-field style="width: 80%">
+              <mat-select placeholder="Unidad" formControlName="codeUnit" name="Unit" required>
+                <mat-option *ngFor="let Unit of listUnit" [value]="Unit.codeUnit">
+                  {{Unit.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error> Ingrese algún valor </mat-error>
+            </mat-form-field>
+            <div *ngIf="!disabledEdit">
+              <button mat-icon-button (click)="getUnit(true)" matTooltip="Actualizar Unidades" >
+                <mat-icon>refresh</mat-icon>
+              </button>
+              <button mat-icon-button (click)="addUnit()" matTooltip="Agregar Unidad">
+                <mat-icon>plus_one</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
+          <mat-checkbox fxFlex="50%"  fxFlexAlign="center" formControlName="divisible" (change)="disabledChange()">Divisible</mat-checkbox>
+          <mat-form-field fxFlex="20%" >
+            <mat-select placeholder="Unidad" formControlName="divisibleCodeUnit" name="Unit" required>
+              <mat-option *ngFor="let Unit of listUnit" [value]="Unit.codeUnit"> {{Unit.name}} </mat-option>
+            </mat-select>
+            <mat-error> Ingrese algún valor </mat-error>
+          </mat-form-field>
+          <div *ngIf="!disabledEdit">
+            <button mat-icon-button (click)="getUnit(true)" matTooltip="Actualizar Unidades">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
+          <mat-form-field fxFlex="25%">
+            <input matInput type="number" min="0" placeholder="Número de partes" formControlName="divisibleNumberParts" required>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="100%">    
+          <mat-checkbox fxFlex="50%" fxFlexAlign="center" formControlName="perishable">Perecible</mat-checkbox>
+          <mat-checkbox fxFlex="25%" fxFlexAlign="center" formControlName="traceable" (change)="traceableChange()">Trazable</mat-checkbox>
+          <mat-form-field fxFlex="25%">
+            <mat-select placeholder="Codigo de barras" formControlName="barcodeType" name="barcodeType" required (change)="barcodeTypeChange()">
+              <mat-option value = "Generado">Generado</mat-option>
+              <mat-option value = "Producto">Del producto</mat-option>
+              <mat-option value = "SinCodigo">Sin codigo</mat-option>            
+            </mat-select>
+            <mat-error> Ingrese algún valor </mat-error>
+          </mat-form-field>
+        </div>
+        <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
+        <div fxLayout="row" fxLayoutAlign="end">
+          <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!form.valid">SIGUIENTE<mat-icon>chevron_right</mat-icon></button>
+        </div>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>PROPIEDADES DEL PRODUCTO</ng-template>          
+        <button mat-button (click)="addRowProperty()"><mat-icon>add</mat-icon> Agregar Propiedad</button>
+        <hr>
+        <div fxLayout="row" fxLayout.xs="100%">
+          <table formArrayName="listProperty" style="width: 80%">
+            <thead>
+              <th colspan="1"></th>
+              <th align="tex-center">Nombre</th>
+              <th align="tex-center">Abreviatura</th>
+              <th align="tex-center">Es Obligatorio</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let property of form['controls'].listProperty['controls']; let $index=index" [formGroupName]="$index">
+                <td>
+                  <button mat-icon-button (click)="deleteProperty($index)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+                <td>
+                  <mat-form-field fxLayoutAlign="center">
+                    <input matInput type="text" placeholder="Ejm: Color" formControlName="name" required/>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field fxLayoutAlign="center">
+                    <input matInput type="text"  placeholder="Ejm: C" formControlName="abbreviation" required/>
+                  </mat-form-field>
+                </td>                    
+                <td><mat-checkbox fxLayoutAlign="center" formControlName="required"></mat-checkbox></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end"> 
+          <button mat-button matStepperPrevious><mat-icon>chevron_left</mat-icon>ATRAS</button>
+          <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
+          <button mat-raised-button color="primary" [disabled]="!form.valid" matStepperNext>SIGUIENTE<mat-icon>chevron_right</mat-icon></button>
+        </div>
+      </mat-step>
+      <mat-step *ngIf="title != operationView">
+        <ng-template matStepLabel>GUARDAR</ng-template>
+        <div fxLayout="column">
+          Nombre producto: {{ form.value.name }}<br>
+          Unidad: {{ form.value.codeUnit }}<br>
+          Codigo Barras: {{ form.value.barcodeType }}         
+        </div>                    
+        <div fxLayout="row" fxLayoutAlign="center"> 
+          <button mat-button matStepperPrevious><mat-icon>chevron_left</mat-icon>ATRAS</button>
+          <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
+          <div *ngIf="title != operationView">        
+            <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid">{{title}}</button>
+          </div>  
+        </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+  </form>    
+</mat-dialog-content>
+
+<!--<div *ngIf="title != operationView">
+    <button mat-raised-button matStepperNext color="primary" mat-dialog-close (click)="save()" [disabled]="!form.valid" >{{title}}</button>
+  </div>  
+  <button mat-button [mat-dialog-close]="true">CANCELAR</button>-->

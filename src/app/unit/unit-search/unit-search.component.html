@@ -1,0 +1,57 @@
+<form [formGroup]="form" >
+  <diV fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="100%"  fxFlex.xs="100%">
+      <mat-card class="example-card">
+        <mat-card-header>        
+          <mat-card-title>UNIDAD - BUSQUEDA</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div fxLayout="row" fxLayout.xs="column">
+            <div fxFlex="50%"  fxFlex.xs="100%">
+              <mat-form-field >
+                <input matInput type="text" placeholder="Nombre" formControlName="name" (keyup)="applyFilter($event.target.value)">
+              </mat-form-field>
+            </div>
+            <div fxFlex="50%"  fxFlex.xs="100%">
+              <button mat-raised-button color="primary" (click)="addItem()" >
+                <mat-icon>open_in_new</mat-icon> NUEVO
+              </button>
+            </div>              
+          </div>
+          <div fxLayout="row">
+            <diV fxFlex="100%">
+              <mat-table #table [dataSource]="dataSource" matSort>                  
+                <ng-container matColumnDef="code">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
+                  <mat-cell *matCellDef="let element" fxFlex="10%" > {{element.codeUnit}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </mat-header-cell>
+                  <mat-cell *matCellDef="let element" fxFlex="60%" > {{element.name}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="button">
+                  <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">                       
+                    <button mat-icon-button fxFlex = "10%" (click)="updateItem(element)" matTooltip="Modificar" >
+                      <mat-icon>mode_edit</mat-icon>
+                    </button>
+                    <button mat-icon-button fxFlex = "10%" (click)="viewItem(element)" matTooltip="Ver">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button fxFlex = "10%"(click)="deleteItem(element)" matTooltip="Eliminar">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </diV>
+          </div>                      
+        </mat-card-content>        
+      </mat-card>
+    </div>
+  </diV>
+  <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing> 
+</form>

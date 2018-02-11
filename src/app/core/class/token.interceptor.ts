@@ -12,7 +12,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Clone the request to add the new header.
-    var userName: string = "";
+    var userName: string = "betzabe";
     
     /*if (localStorage.getItem('userInfo') != null && localStorage.getItem('userInfo') != ""){
         userName = (<ENUser>JSON.parse(localStorage.getItem('userInfo'))).userName;

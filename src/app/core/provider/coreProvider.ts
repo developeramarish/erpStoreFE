@@ -14,7 +14,15 @@ export class CoreProvider{
         alert(message);
     }
 
+    showMessageOK(): void{
+        alert("Se proceso de forma correcta");
+    }
+
     getUrlBackEnd(): string{
         return 'http://localhost:49903/';
+    }
+
+    getUser(): string {
+        return "betzabe";
     }
 }
