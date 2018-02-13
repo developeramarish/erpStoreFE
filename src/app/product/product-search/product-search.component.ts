@@ -12,6 +12,7 @@ import { ENResult } from '../../core/class/ENResult';
 import { ProductProvider } from '../product-provider/productProvider';
 import { ENProduct } from '../product-class/ENProduct';
 import { ProductMaintenanceComponent } from '../product-maintenance/product-maintenance.component';
+import { ENProductProperty } from '../product-class/ENProductProperty';
 
 @Component({
   selector: 'itcusco-product-search',
@@ -21,8 +22,8 @@ import { ProductMaintenanceComponent } from '../product-maintenance/product-main
 })
 export class ProductSearchComponent extends Parent implements OnInit {
   listItem: Array<ENProduct> = [];
-  dataSource: MatTableDataSource<ENProduct>;
-  displayedColumns = ['name','code', 'button'];
+  dataSource: MatTableDataSource<ENProduct>;  
+  displayedColumns = ['name','category','brand','codeUnit','button'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
@@ -131,5 +132,4 @@ export class ProductSearchComponent extends Parent implements OnInit {
       }
     });
   }
-
 }

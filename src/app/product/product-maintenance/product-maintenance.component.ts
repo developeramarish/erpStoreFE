@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CoreProvider } from './../../core/provider/coreProvider';
 import { ENProduct } from '../product-class/ENProduct';
 import { ENResult } from '../../core/class/ENResult';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { HttpClient, HttpErrorResponse, HttpHeaders  } from '@angular/common/http';
 import { Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { Parent } from  './../../core/class/Parent';
 import { ENCategory } from '../../category/category-class/ENCategory';
 import { CategoryProvider } from '../../category/category-provider/categoryProvider';
@@ -21,22 +21,28 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { ENProductProperty } from '../product-class/ENProductProperty';
+import { ProductProvider } from '../product-provider/productProvider';
 
 @Component({
   selector: 'itcusco-product-maintenance',
   templateUrl: './product-maintenance.component.html',
   styles: [],
-  providers: [ CoreProvider, CategoryProvider, BrandProvider, UnitProvider ]
+  providers: [ CoreProvider, CategoryProvider, BrandProvider, UnitProvider, ProductProvider ]
 })
 export class ProductMaintenanceComponent extends Parent implements OnInit {
   listCategory: Array<ENCategory>;
   listBrand: Array<ENBrand>;
   listUnit: Array<ENUnit>;
+  listProperty: Array<ENProductProperty> = [];
   tempDivisibleNumberPart: number;
   tempDivisibleCodeUnit: string; 
-  listPropertyDelete: Array<ENProductProperty>;
+  listPropertyDelete: Array<ENProductProperty> = [];
   
-  constructor(
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor
+  (
     public dialogRef: MatDialogRef<ProductMaintenanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private formBuilder: FormBuilder, 
@@ -45,6 +51,7 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
     private categoryProvider: CategoryProvider,
     private brandProvider: BrandProvider,
     private unitProvider: UnitProvider,
+    private productProvider: ProductProvider,
     public dialog: MatDialog 
   ) 
   { super() }
@@ -86,11 +93,21 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
       this.form = this.formBuilder.group
       ({
         idProduct: [temp.idProduct],
-        idCategory: [temp.idCategory, Validators.required],
-        idBrand: [temp.idBrand, Validators.required],
+        idCategory: [{
+          value: temp.idCategory,
+          disabled: this.disabledEdit
+        },
+          Validators.required],
+        idBrand: [{
+          value: temp.idBrand,
+          disabled: this.disabledEdit
+          }, 
+          Validators.required
+        ],
         codeUnit: 
         [{
           value: temp.codeUnit,
+          disabled: this.disabledEdit
           }, 
           Validators.required
         ],
@@ -101,16 +118,70 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
         }, 
         Validators.required
         ],
-        divisible: [temp.divisible],
-        divisibleCodeUnit: [temp.divisibleCodeUnit],
-        divisibleNumberParts: [temp.divisibleNumberParts],
-        perishable: [temp.perishable],
-        traceable: [temp.traceable],
+        divisible: [{
+          value: temp.divisible, 
+          disabled: this.disabledEdit          
+        }],
+        divisibleCodeUnit: [{
+          value: temp.divisibleCodeUnit,
+          disabled: this.disabledEdit          
+        }],
+        divisibleNumberParts: [{
+          value: temp.divisibleNumberParts,
+          disabled: this.disabledEdit
+         }],
+        perishable: [{
+          value:temp.perishable,
+          disabled: this.disabledEdit
+        }],
+        traceable: [{
+          value: temp.traceable,
+          disabled: this.disabledEdit
+        }],
         barcodeType: [{
-          value: temp.barcodeType
+          value: temp.barcodeType,
+          disabled: this.disabledEdit
         }, Validators.required],
         listProperty: this.formBuilder.array([]),
       });
+      this.productProvider.searchProperty(temp.idProduct)
+      .then(data  => {          
+        this.showProcessing = false;
+        if((<ENResult>data).code == 0){
+          var listProperty: Array<ENProductProperty> = <Array<ENProductProperty>>(<ENResult>data).result;
+          const control = <FormArray>this.form.controls['listProperty'];
+          for (var i =0; i<listProperty.length; i++){
+            control.push(
+              this.formBuilder.group({
+                idProduct: [{
+                  value: listProperty[i].idProduct,
+                  disabled: this.disabledEdit
+                }],
+                idProperty: [{
+                  value: listProperty[i].idProperty, 
+                  disabled: this.disabledEdit
+                }],
+                name: [{
+                  value: listProperty[i].name,
+                  disabled: this.disabledEdit
+                }],
+                abbreviation: [{
+                  value: listProperty[i].abbreviation,
+                  disabled: this.disabledEdit
+                }],          
+                required: [{
+                  value: listProperty[i].required,
+                  disabled: this.disabledEdit
+                }]
+              })
+            )
+          }
+        }
+        else{
+          this.coreProvider.showMessageError((<ENResult>data).message);
+        }
+        
+      })
     }
     else{
       this.form = this.formBuilder.group({

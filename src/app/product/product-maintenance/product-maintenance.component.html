@@ -3,7 +3,7 @@
   <form [formGroup]="form">
     <mat-horizontal-stepper linear = true #stepper="matHorizontalStepper">
       <mat-step>
-        <ng-template matStepLabel>DATOS GENERALES DE PRODUCTO</ng-template>
+        <ng-template matStepLabel>DATOS GENERALES</ng-template>
         <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
           <div fxFlex="50%" fxLayout.xs="100%">
             <mat-form-field style="width: 80%">
@@ -107,8 +107,10 @@
         </div>
       </mat-step>
       <mat-step>
-        <ng-template matStepLabel>PROPIEDADES DEL PRODUCTO</ng-template>          
-        <button mat-button (click)="addRowProperty()"><mat-icon>add</mat-icon> Agregar Propiedad</button>
+        <ng-template matStepLabel>PROPIEDADES</ng-template>
+        <div *ngIf="title != operationView">
+          <button mat-button (click)="addRowProperty()"><mat-icon>add</mat-icon>Agregar Propiedad</button>          
+        </div>           
         <hr>
         <div fxLayout="row" fxLayout.xs="100%">
           <table formArrayName="listProperty" style="width: 80%">
@@ -121,7 +123,7 @@
             <tbody>
               <tr *ngFor="let property of form['controls'].listProperty['controls']; let $index=index" [formGroupName]="$index">
                 <td>
-                  <button mat-icon-button (click)="deleteProperty($index)" matTooltip="Eliminar">
+                  <button  *ngIf="title != operationView" mat-icon-button (click)="deleteProperty($index)" matTooltip="Eliminar">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>
@@ -143,20 +145,15 @@
         <div fxLayout="row" fxLayoutAlign="end"> 
           <button mat-button matStepperPrevious><mat-icon>chevron_left</mat-icon>ATRAS</button>
           <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
-          <button mat-raised-button color="primary" [disabled]="!form.valid" matStepperNext>SIGUIENTE<mat-icon>chevron_right</mat-icon></button>
+          <button *ngIf="title != operationView" mat-raised-button color="primary" [disabled]="!form.valid" matStepperNext>SIGUIENTE<mat-icon>chevron_right</mat-icon></button>
         </div>
       </mat-step>
       <mat-step *ngIf="title != operationView">
-        <ng-template matStepLabel>GUARDAR</ng-template>
-        <div fxLayout="column">
-          Nombre producto: {{ form.value.name }}<br>
-          Unidad: {{ form.value.codeUnit }}<br>
-          Codigo Barras: {{ form.value.barcodeType }}         
-        </div>                    
+        <ng-template matStepLabel>GUARDAR</ng-template>               
         <div fxLayout="row" fxLayoutAlign="center"> 
           <button mat-button matStepperPrevious><mat-icon>chevron_left</mat-icon>ATRAS</button>
           <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
-          <div *ngIf="title != operationView">        
+          <div>        
             <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid">{{title}}</button>
           </div>  
         </div>
