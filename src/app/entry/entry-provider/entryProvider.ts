@@ -7,11 +7,11 @@ import 'rxjs/Rx';
 import {BrowserModule} from '@angular/platform-browser';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import { ENResult } from '../../core/class/ENResult';
-import { BrandMaintenanceComponent } from '../brand-maintenance/brand-maintenance.component'
+import { EntryMaintenanceComponent } from '../entry-maintenance/entry-maintenance.component'
 
 
 @Injectable()
-export class BrandProvider {
+export class EntryProvider {
     constructor(
       public dialog: MatDialog,
       private http: HttpClient,
@@ -19,25 +19,21 @@ export class BrandProvider {
 
     ) {}
 
-    searchBrand(IdBrand:number) {
+    searchEntry(IdEntry:number) {
       let promise =  new Promise((resolve, reject) => {
-        const url = this.coreProvider.getUrlBackEnd() + 'PRBrand/Search';
+        const url = this.coreProvider.getUrlBackEnd() + 'PREntry/Search';
         const body = JSON.stringify(
         {
-          idBrand: IdBrand,
+          idEntry: IdEntry
         });
         const headers = new HttpHeaders().
         set('Content-Type', 'application/json; charset=utf-8');    
         this.http.post<ENResult>(url, body, {headers: headers})
         .toPromise()
-        .then(data => {            
-            resolve(data);
-          },
-          err => {
-            reject(err);
-          }
-        );
+        .then(  data => { resolve(data); },
+                err => { reject(err); }
+            );
       });   
-      return promise;   
+      return promise; 
     }
 }

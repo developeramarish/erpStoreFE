@@ -202,6 +202,7 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
   }
 
   save(){    
+    this.showProcessing = true;
     var url:string;
     var body;
     if (this.form.value.divisible  == true ){
@@ -238,7 +239,6 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
         url = this.coreProvider.getUrlBackEnd() + 'PRProduct/insert'; 
         delete info.id;
         delete info.listPropertyDelete;
-        alert(JSON.stringify(info));   
       }  
       body = JSON.stringify(info);    
     }
@@ -264,7 +264,10 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
         this.coreProvider.showMessageError(data.message);
       }
       },
-      (err) => { this.coreProvider.showMessageErrorUnexpected(); }
+      (err) => { 
+        this.showProcessing = false;
+        this.coreProvider.showMessageErrorUnexpected(); 
+      }
     );
   }
 
@@ -432,6 +435,5 @@ export class ProductMaintenanceComponent extends Parent implements OnInit {
       this.listPropertyDelete.push(control.at(index).value);
       control.removeAt(index);
     }
-    control.removeAt(index);
   }
 }

@@ -37,9 +37,11 @@ export class StoreSearchComponent extends Parent implements OnInit {
     private storeProvider: StoreProvider,
     public dialog: MatDialog) { 
     super();
-    this.actionView = "M00003";
+    this.actionView = "STO001";
+    this.actionEdit = "STO002";
+    
     //valid user and enterprise
-    if (!this.validateSession()){
+    if (!this.validateSession(this.actionView)){
       this.router.navigate(['/']);
     }
   }
@@ -132,7 +134,10 @@ export class StoreSearchComponent extends Parent implements OnInit {
 
   buildForm(): void {
     this.form = this.formBuilder.group({
-      Nombre: ['']
+      idStore: [0],
+      name: [''],
+      address: [''],
+      processSale: ['']
     });
   }
 }

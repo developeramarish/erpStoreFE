@@ -5,7 +5,6 @@ import { Router } from "@angular/router";
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-
 import { BrandMaintenanceComponent } from './../brand-maintenance/brand-maintenance.component' 
 import { MatDialog, MatDialogRef, MatTableDataSource, MatSort, MatPaginator, MAT_DIALOG_DATA } from '@angular/material';
 import { CoreProvider } from '../../core/provider/coreProvider';
@@ -35,14 +34,16 @@ export class BrandSearchComponent extends Parent implements OnInit {
     private router: Router,
     private coreProvider: CoreProvider,
     private brandProvider: BrandProvider,
-    public dialog: MatDialog) { 
-    super();
-    this.actionView = "M00002";
-    //valid user and enterprise
-    if (!this.validateSession()){
-      this.router.navigate(['/']);
+    public dialog: MatDialog) 
+    { 
+      super();
+      this.actionView = "BRA001";
+      this.actionEdit = "BRA002"
+      //valid user and enterprise
+      if (!this.validateSession(this.actionView)){
+        this.router.navigate(['/']);
+      }
     }
-  }
 
   ngOnInit() {
     this.buildForm();

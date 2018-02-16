@@ -45,11 +45,9 @@
         <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
           <div fxFlex="50%" fxLayout.xs="100%">
             <mat-form-field style="width: 90%">
-              <input matInput placeholder="Nombre" formControlName="name" required>
+              <input matInput placeholder="Nombre" formControlName="name" required maxlength="100">
+              <mat-error>Ingrese algún valor</mat-error>
             </mat-form-field>
-            <mat-error *ngIf="form.controls['name'].hasError('name')">
-              Ingrese algún valor
-            </mat-error>
           </div>  
           <div fxFlex="50%" fxLayout.xs="100%">
             <mat-form-field style="width: 80%">
@@ -100,7 +98,6 @@
             <mat-error> Ingrese algún valor </mat-error>
           </mat-form-field>
         </div>
-        <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
         <div fxLayout="row" fxLayoutAlign="end">
           <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!form.valid">SIGUIENTE<mat-icon>chevron_right</mat-icon></button>
@@ -129,12 +126,12 @@
                 </td>
                 <td>
                   <mat-form-field fxLayoutAlign="center">
-                    <input matInput type="text" placeholder="Ejm: Color" formControlName="name" required/>
+                    <input matInput type="text" placeholder="Ejm: Color" formControlName="name" required maxlength="100"/>
                   </mat-form-field>
                 </td>
                 <td>
                   <mat-form-field fxLayoutAlign="center">
-                    <input matInput type="text"  placeholder="Ejm: C" formControlName="abbreviation" required/>
+                    <input matInput type="text"  placeholder="Ejm: C" formControlName="abbreviation" required maxlength="10"/>
                   </mat-form-field>
                 </td>                    
                 <td><mat-checkbox fxLayoutAlign="center" formControlName="required"></mat-checkbox></td>
@@ -149,7 +146,7 @@
         </div>
       </mat-step>
       <mat-step *ngIf="title != operationView">
-        <ng-template matStepLabel>GUARDAR</ng-template>               
+        <ng-template matStepLabel>{{ title }}</ng-template>               
         <div fxLayout="row" fxLayoutAlign="center"> 
           <button mat-button matStepperPrevious><mat-icon>chevron_left</mat-icon>ATRAS</button>
           <button mat-button color="accent" mat-dialog-close>CANCELAR</button>
@@ -159,10 +156,6 @@
         </div>
         </mat-step>
     </mat-horizontal-stepper>
+    <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
   </form>    
 </mat-dialog-content>
-
-<!--<div *ngIf="title != operationView">
-    <button mat-raised-button matStepperNext color="primary" mat-dialog-close (click)="save()" [disabled]="!form.valid" >{{title}}</button>
-  </div>  
-  <button mat-button [mat-dialog-close]="true">CANCELAR</button>-->

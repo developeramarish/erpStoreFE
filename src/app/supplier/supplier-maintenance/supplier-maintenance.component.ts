@@ -5,18 +5,18 @@ import { CoreProvider } from './../../core/provider/coreProvider';
 import { Parent } from  './../../core/class/Parent';
 import { Inject} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ENUnit } from '../unit-class/ENUnit';
+import { ENSupplier } from '../supplier-class/ENSupplier';
 import { ENResult } from '../../core/class/ENResult';
 
 @Component({
-  selector: 'itcusco-unit-maintenance',
-  templateUrl: './unit-maintenance.component.html',
+  selector: 'itcusco-supplier-maintenance',
+  templateUrl: './supplier-maintenance.component.html',
   styles: [],
   providers: [ CoreProvider ]
 })
-export class UnitMaintenanceComponent extends Parent implements OnInit {
+export class SupplierMaintenanceComponent extends Parent implements OnInit {
   constructor(
-    public dialogRef: MatDialogRef<UnitMaintenanceComponent>,
+    public dialogRef: MatDialogRef<SupplierMaintenanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private formBuilder: FormBuilder, 
     private http: HttpClient, 
@@ -47,22 +47,48 @@ export class UnitMaintenanceComponent extends Parent implements OnInit {
 
   buildForm(): void {
     if (this.data["info"] != null){
-      var temp:ENUnit= <ENUnit>this.data["info"];
+      var temp:ENSupplier= <ENSupplier>this.data["info"];
       this.form = this.formBuilder.group({
-        codeUnit: [ 
-        {
-          value: temp.codeUnit,
-          disabled: this.disabledEdit
-        }, Validators.required],
+        idSupplier: [temp.idSupplier],
         name: [{
           value: temp.name,
           disabled: this.disabledEdit
-        }, Validators.required]
+        }, Validators.required],
+        documentType: [{
+          value: temp.documentType,
+          disabled: this.disabledEdit
+        }, Validators.required],
+        documentNumber: [{
+          value: temp.documentNumber,
+          disabled: this.disabledEdit
+        }, Validators.required],
+        address: [{
+          value: temp.address,
+          disabled: this.disabledEdit
+        }],
+        phoneNumber: [{
+          value: temp.phoneNumber,
+          disabled: this.disabledEdit
+        }],
+        email: [{
+          value: temp.email,
+          disabled: this.disabledEdit
+        }],
+        contactPerson: [{
+          value: temp.contactPerson,
+          disabled: this.disabledEdit
+        }]
       });
     }else{
       this.form = this.formBuilder.group({
-        codeUnit: ['', Validators.required],
-        name: ['', Validators.required]
+        idSupplier: [0],
+        name: ['', Validators.required],
+        documentType: ['', Validators.required],
+        documentNumber: ['', Validators.required],
+        address: [''],
+        phoneNumber: [''],
+        email: [''],
+        contactPerson: ['']
       });
     }
   }
@@ -72,23 +98,29 @@ export class UnitMaintenanceComponent extends Parent implements OnInit {
     var body;
     if (this.title == this.operationNew || this.title == this.operationUpdate){
       var info = {
-        code: this.form.value.codeUnit,
-        name: this.form.value.name
+        id: this.form.value.idSupplier,
+        name: this.form.value.name,
+        documentType: this.form.value.documentType,
+        documentNumber: this.form.value.documentNumber,
+        address: this.form.value.address,
+        phoneNumber: this.form.value.phoneNumber,
+        email: this.form.value.email,
+        contactPerson: this.form.value.contactPerson
       };
       if (this.title == this.operationUpdate){
-        url = this.coreProvider.getUrlBackEnd() + 'PRUnit/update'; 
+        url = this.coreProvider.getUrlBackEnd() + 'PRSupplier/update'; 
       }
-      else
-      {
-        url = this.coreProvider.getUrlBackEnd() + 'PRUnit/insert';    
+      else{
+        url = this.coreProvider.getUrlBackEnd() + 'PRSupplier/insert';    
+        delete info.id;
       }  
       body = JSON.stringify(info);    
     }
     if (this.title == this.operationDelete){
-      url = this.coreProvider.getUrlBackEnd() + 'PRUnit/delete';    
+      url = this.coreProvider.getUrlBackEnd() + 'PRSupplier/delete';    
       body = JSON.stringify({ 
-        code: this.form.value.codeUnit
-      });
+        id: this.form.value.idSupplier,
+      });    
     }
     const headers = new HttpHeaders().
     set('Content-Type', 'application/json; charset=utf-8');    
@@ -98,9 +130,7 @@ export class UnitMaintenanceComponent extends Parent implements OnInit {
         if (data.code == 0){
           this.coreProvider.showMessageOK();
           this.dialogRef.close();
-        }
-        else
-        {  
+        }else{
           this.coreProvider.showMessageError(data.message);
         }
       },

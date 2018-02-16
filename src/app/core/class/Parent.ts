@@ -1,4 +1,5 @@
 import { FormGroup } from "@angular/forms";
+import { ENUser } from "../../login/login-class/ENUser";
 
 export class Parent{
     public showProcessing: Boolean = false;
@@ -10,9 +11,16 @@ export class Parent{
     public disabledEdit: boolean = true;
     public title: string;
     public actionView: string;
-    public validateSession(): Boolean{
-        //Validar el actionView
-        return true;
+    public actionEdit: string;    
+    public validateSession(actionCode: string ): Boolean{
+        var flag:boolean= false;        
+        var temp: ENUser= (<ENUser>JSON.parse( localStorage.getItem("userInfo")));
+        for(var i = 0; i < temp.actions.length; i++)
+        {
+            if(temp.actions[i].code == actionCode){
+                flag = true;
+            }
+        }
+        return flag;
     }
-    
 }

@@ -1,0 +1,115 @@
+<mat-card>
+  <mat-card-title> INGRESO DE PRODUCTOS - {{title}} </mat-card-title>
+  <form [formGroup]="form">
+    <mat-card-content>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
+        <mat-form-field >
+          <!--[matDatepickerFilter]="applyFilter($event.target.value)" -->
+          <input matInput [matDatepicker]="date" formControlName="date" placeholder="Seleccione fecha" required>
+          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+          <mat-datepicker #date disabled="false"></mat-datepicker>
+          <mat-error> Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayout.xs="row">
+        <div fxFlex="30%">
+          <div fxLayout="column" fxcLayout.sm="column" fxLayout.xs="column">
+            <label>Tipo de entrada:</label>
+            <br>
+            <mat-radio-group style="flex-direction: column;" formControlName="entryType" (change)="disabledSource()" required>
+              <mat-radio-button value="compra">Compra </mat-radio-button>
+              <br><br>
+              <mat-radio-button value="traslado">Traslado</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div fxFlex="70%">
+          <div fxLayout="column" fxLayout.sm="column" fxLayout.xs="column">
+            <div fxFlex="100%" fxLayout.xs="100%">
+              <mat-form-field style="width: 70%">
+                <mat-select placeholder="Proveedor" formControlName="idSourceSupplier" name="supplier" required>
+                  <mat-option *ngFor="let supplier of listSupplier" [value]="supplier.idSupplier">
+                    {{supplier.name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error> Ingrese algún valor</mat-error>
+              </mat-form-field>
+              <div *ngIf="!disabledEdit">
+                <button mat-icon-button (click)="getSupplier(true)" matTooltip="Actualizar proveedores">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+                <button mat-icon-button (click)="addSupplier()" matTooltip="Agregar proveedores">
+                  <mat-icon>plus_one</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div fxFlex="100%" fxLayout.xs="100%">
+              <mat-form-field style="width: 70%">
+                <mat-select placeholder="Tienda" formControlName="idSourceStore" name="store" required>
+                  <mat-option *ngFor="let store of listStore" [value]="store.idStore">
+                    {{store.name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error> Ingrese algún valor</mat-error>
+              </mat-form-field>
+              <div *ngIf="!disabledEdit">
+                <button mat-icon-button (click)="getStore(true)" matTooltip="Actualizar tiendas">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+                <button mat-icon-button (click)="addStore()" matTooltip="Agregar tienda">
+                  <mat-icon>plus_one</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+      </div>
+      </div>
+      <hr>
+      <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
+        <div fxFlex="33%">
+          <mat-form-field style="width: 80%">
+            <mat-select placeholder="Categoria" formControlName="idCategory" name="category" required (change)="getProduct()">
+              <mat-option *ngFor="let category of listCategory" [value]="category.idCategory">
+                {{category.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error> Ingrese algún valor</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxFlex="33%" fxLayout.xs="100%">
+          <mat-form-field style="width: 80%">
+            <mat-select placeholder="Productos" name="product" required>
+              <mat-option *ngFor="let product of listProduct" [value]="product.idProduct">
+                {{product.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error> Ingrese algún valor</mat-error>
+          </mat-form-field>
+          <div *ngIf="!disabledEdit">
+            <button mat-icon-button (click)="getProduct(true)" matTooltip="Actualizar productos">
+              <mat-icon>refresh</mat-icon>
+            </button>
+            <button mat-icon-button (click)="addProduct()" matTooltip="Agregar producto">
+              <mat-icon>plus_one</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div fxFlex="33%">
+          <mat-form-field style="width: 70%" fxLayoutAlign="end">
+            <input matInput placeholder="Codigo de Barras" required maxlength="100" disabled>
+            <mat-error>Ingrese algún valor</mat-error>
+          </mat-form-field>
+        </div>
+    </div>
+
+      
+    </mat-card-content>
+    <mat-card-actions>
+      <div *ngIf="title != operationView">
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid" >{{title}}</button>
+      </div>  
+      <button mat-button>CANCELAR</button>
+    </mat-card-actions>
+    <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
+  </form>
+</mat-card>

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class CoreProvider{
     showMessageError(message: String): void{
-        alert(message);
+        alert( message);
     }
 
     showMessageErrorUnexpected(): void{
@@ -19,7 +19,8 @@ export class CoreProvider{
     }
 
     getUrlBackEnd(): string{
-        return 'http://localhost:49903/';
+        return 'http://inkavebe.itcusco.com/';
+        //return 'http://localhost:49903/';
     }
 
     getUser(): string {

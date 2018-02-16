@@ -24,8 +24,25 @@ export class ProductProvider {
       const url = this.coreProvider.getUrlBackEnd() + 'PRProduct/search';
       const body = JSON.stringify(
       {
-        IdProduct: IdProduct, 
-        Usuario : this.coreProvider.getUser(),  
+        IdProduct: IdProduct
+      });
+      const headers = new HttpHeaders().
+      set('Content-Type', 'application/json; charset=utf-8');    
+      this.http.post<ENResult>(url, body, {headers: headers})
+      .toPromise()
+      .then(data => { resolve(data); },
+            err => { reject(err); }
+      );
+    });   
+    return promise;   
+  }
+
+  searchProductCategory(idCategory:number) {
+    let promise =  new Promise((resolve, reject) => {
+      const url = this.coreProvider.getUrlBackEnd() + 'PRProduct/searchCategory';
+      const body = JSON.stringify(
+      {
+        idCategory: idCategory
       });
       const headers = new HttpHeaders().
       set('Content-Type', 'application/json; charset=utf-8');    

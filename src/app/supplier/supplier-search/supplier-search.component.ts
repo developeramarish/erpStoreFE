@@ -6,26 +6,26 @@ import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-import { UnitMaintenanceComponent } from './../unit-maintenance/unit-maintenance.component' 
+import { SupplierMaintenanceComponent } from './../supplier-maintenance/supplier-maintenance.component' 
 import { MatDialog, MatDialogRef, MatTableDataSource, MatSort, MatPaginator, MAT_DIALOG_DATA } from '@angular/material';
 import { CoreProvider } from '../../core/provider/coreProvider';
 import { Parent } from '../../core/class/Parent';
-import { UnitProvider } from '../unit-provider/unitProvider';
-import { ENUnit } from '../unit-class/ENUnit';
+import { SupplierProvider } from '../supplier-provider/supplierProvider';
+import { ENSupplier } from '../supplier-class/ENSupplier';
 import { ENResult } from '../../core/class/ENResult';
 
 
 @Component({
-  selector: 'itcusco-unit-search',
-  templateUrl: './unit-search.component.html',
+  selector: 'itcusco-supplier-search',
+  templateUrl: './supplier-search.component.html',
   styles: [],
-  providers: [CoreProvider, UnitProvider]
+  providers: [CoreProvider, SupplierProvider]
 })
-export class UnitSearchComponent extends Parent implements OnInit {
+export class SupplierSearchComponent extends Parent implements OnInit {
 
-  listItem: Array<ENUnit> = [];
-  dataSource: MatTableDataSource<ENUnit>;
-  displayedColumns = ['code', 'name', 'button'];
+  listItem: Array<ENSupplier> = [];
+  dataSource: MatTableDataSource<ENSupplier>;
+  displayedColumns = ['name', 'button'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
@@ -34,11 +34,12 @@ export class UnitSearchComponent extends Parent implements OnInit {
     private http: HttpClient, 
     private router: Router,
     private coreProvider: CoreProvider,
-    private unitProvider: UnitProvider,
+    private supplierProvider: SupplierProvider,
     public dialog: MatDialog) { 
     super();
-    this.actionView = "UNI001";
-    this.actionEdit = "UNI002";    
+    this.actionView = "SUP001";
+    this.actionEdit = "SUP002";
+    
     //valid user and enterprise
     if (!this.validateSession(this.actionView)){
       this.router.navigate(['/']);
@@ -58,10 +59,10 @@ export class UnitSearchComponent extends Parent implements OnInit {
 
   getItem(): void{
     this.showProcessing = true;
-    this.unitProvider.searchUnit(0)
+    this.supplierProvider.searchSupplier(0)
     .then(data =>{
       this.showProcessing = false;
-      this.listItem = <Array<ENUnit>>(<ENResult>data).result;          
+      this.listItem = <Array<ENSupplier>>(<ENResult>data).result;          
       this.dataSource = new MatTableDataSource(this.listItem);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -72,7 +73,7 @@ export class UnitSearchComponent extends Parent implements OnInit {
   }
 
   updateItem(item){
-    let dialogRef = this.dialog.open(UnitMaintenanceComponent, {
+    let dialogRef = this.dialog.open(SupplierMaintenanceComponent, {
       width: '80%',
       disableClose: true, 
       data: { 
@@ -87,7 +88,7 @@ export class UnitSearchComponent extends Parent implements OnInit {
   }
 
   viewItem(item){
-    let dialogRef = this.dialog.open(UnitMaintenanceComponent, {
+    let dialogRef = this.dialog.open(SupplierMaintenanceComponent, {
       width: '80%',
       disableClose: true, 
       data: { 
@@ -102,8 +103,7 @@ export class UnitSearchComponent extends Parent implements OnInit {
   }
   
   deleteItem(item){
-    alert(JSON.stringify (item));    
-    let dialogRef = this.dialog.open(UnitMaintenanceComponent, {
+    let dialogRef = this.dialog.open(SupplierMaintenanceComponent, {
       width: '80%',
       disableClose: true, 
       data: { 
@@ -118,7 +118,7 @@ export class UnitSearchComponent extends Parent implements OnInit {
   }
 
   addItem() {
-    let dialogRef = this.dialog.open(UnitMaintenanceComponent, {
+    let dialogRef = this.dialog.open(SupplierMaintenanceComponent, {
       width: '80%',
       disableClose: true, 
       data: { 
@@ -128,15 +128,20 @@ export class UnitSearchComponent extends Parent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      
       this.getItem();
     });
   }
 
   buildForm(): void {
     this.form = this.formBuilder.group({
-      code: [''],
-      name: ['']
+      idSupplier: [0],
+      name: [''],
+      documentType: [''],
+      documentNumber: ['' ],
+      address: [''],
+      phoneNumber: [''],
+      email: [''],
+      contactPerson: ['']
     });
   }
 }

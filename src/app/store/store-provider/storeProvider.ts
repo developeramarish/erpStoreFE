@@ -24,9 +24,7 @@ export class StoreProvider {
         const url = this.coreProvider.getUrlBackEnd() + 'PRStore/Search';
         const body = JSON.stringify(
         {
-            IdStore: IdStore, 
-            Usuario : this.coreProvider.getUser(),
-            
+          idStore: IdStore,  
         });
         const headers = new HttpHeaders().
         set('Content-Type', 'application/json; charset=utf-8');    
@@ -39,7 +37,7 @@ export class StoreProvider {
             reject(err);
           }
         );
-      });   
-      return promise;   
-    }
+    });   
+    return promise;   
+  }
 }

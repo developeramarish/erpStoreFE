@@ -11,7 +11,9 @@ import { LoginModule } from '../../login/login.module';
 import { UnitSearchModule } from '../../unit/unit-search/unit-search.module';
 import { StoreSearchModule } from '../../store/store-search/store-search.module';
 import { ProductSearchModule } from '../../product/product-search/product-search.module';
-
+import { SupplierSearchModule } from '../../supplier/supplier-search/supplier-search.module';
+import { EntrySearchModule } from '../../entry/entry-search/entry-search.module';
+import { EntryMaintenanceModule } from '../../entry/entry-maintenance/entry-maintenance.module';
 const routes: Routes = [
   {
     path:'',
@@ -38,8 +40,20 @@ const routes: Routes = [
         loadChildren:'./../../store/store-search/store-search.module#StoreSearchModule'
       },
       {
+        path:'supplierSearch',
+        loadChildren:'./../../supplier/supplier-search/supplier-search.module#SupplierSearchModule'
+      },
+      {
         path:'productSearch',
         loadChildren:'./../../product/product-search/product-search.module#ProductSearchModule'
+      },
+      {
+        path:'entrySearch',
+        loadChildren:'./../../entry/entry-search/entry-search.module#EntrySearchModule'
+      },
+      {
+        path:'',
+        loadChildren:'./../../entry/entry-maintenance/entry-maintenance.module#EntryMaintenanceModule'
       }
     ]
   },

@@ -38,9 +38,10 @@ export class ProductSearchComponent extends Parent implements OnInit {
   ) 
   { 
     super();
-    this.actionView = "M00004";
+    this.actionView = "PRO001";
+    this.actionEdit = "PRO002";
     //valid user and enterprise
-    if (!this.validateSession()){
+    if (!this.validateSession(this.actionView)){
       this.router.navigate(['/']);
     } 
   }
@@ -72,7 +73,7 @@ export class ProductSearchComponent extends Parent implements OnInit {
 
   buildForm(): void {
     this.form = this.formBuilder.group({
-      idCategory: [0],
+      idProduct: [0],
       name: [''],
     });
   }

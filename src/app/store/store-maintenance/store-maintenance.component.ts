@@ -53,12 +53,22 @@ export class StoreMaintenanceComponent extends Parent implements OnInit {
         name: [{
           value: temp.name,
           disabled: this.disabledEdit
+        }, Validators.required],
+        address: [{
+          value: temp.address,
+          disabled: this.disabledEdit
+        }, Validators.required],
+        processSale: [{
+          value: temp.processSale,
+          disabled: this.disabledEdit
         }, Validators.required]
       });
     }else{
       this.form = this.formBuilder.group({
         idStore: [0],
-        name: ['', Validators.required]
+        name: ['', Validators.required],
+        address: ['', Validators.required],
+        processSale: ['', Validators.required]
       });
     }
   }
@@ -68,12 +78,15 @@ export class StoreMaintenanceComponent extends Parent implements OnInit {
     var body;
     if (this.title == this.operationNew || this.title == this.operationUpdate){
       var info = {
-          id: this.form.value.idStore,
-          name: this.form.value.name
+        id: this.form.value.idStore,
+        name: this.form.value.name,
+        address: this.form.value.address,
+        processSale:this.form.value.processSale
       };
       if (this.title == this.operationUpdate){
         url = this.coreProvider.getUrlBackEnd() + 'PRStore/update'; 
-      }else{
+      }
+      else{
         url = this.coreProvider.getUrlBackEnd() + 'PRStore/insert';    
         delete info.id;
       }  
@@ -94,7 +107,6 @@ export class StoreMaintenanceComponent extends Parent implements OnInit {
           this.coreProvider.showMessageOK();
           this.dialogRef.close();
         }else{
-          
           this.coreProvider.showMessageError(data.message);
         }
       },

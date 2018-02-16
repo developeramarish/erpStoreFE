@@ -75,7 +75,7 @@ constructor(private router: Router) {
       localStorage.clear();
       break; 
     default: 
-      alert('Error No esta contemplado en el nenu');
+      alert('Error, no esta contemplado en el menu');
     } 
     this.router.navigate([new_url]);
   }

@@ -1,42 +1,34 @@
 <h3 mat-dialog-title color="primary">TIENDA-{{title}}</h3>
 <mat-dialog-content>
-  <form [formGroup]="form" >
-    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
-      <div fxFlex="100%" >
+  <form [formGroup]="form">
+    <div fxLayout="row" fxcLayout.sm="column" fxLayout.xs="column">
+      <div fxFlex="100%">
         <mat-form-field style="width: 100%">
-          <input matInput placeholder="Nombre" formControlName="name" required>
+          <input matInput placeholder="Nombre" maxlength="100" formControlName="name" required>
+          <mat-error>Ingrese algún valor</mat-error>
         </mat-form-field>
-        <mat-error *ngIf="form.controls['name'].hasError('name')">
-          Ingrese algún valor
-        </mat-error>
       </div>
     </div>
     <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
-      <div fxFlex="100%" >
-        <mat-form-field style="width: 100%">
-          <input matInput placeholder="Dirección" formControlName="address" required>
+      <div fxFlex="60%">
+        <mat-form-field style="width: 90%">
+          <input matInput placeholder="Dirección" maxlength="200" formControlName="address" required>
+          <mat-error>Ingrese algún valor</mat-error>
         </mat-form-field>
-        <mat-error *ngIf="form.controls['address'].hasError('address')">
-          Ingrese algún valor
-        </mat-error>
       </div>
-    </div>
-    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
-      <div fxFlex="100%" >
+      <div fxFlex="40%">
         <mat-form-field style="width: 100%">
-          <input matInput placeholder="Proceso de venta" formControlName="processSale" required>
+          <input matInput placeholder="Proceso de venta" maxlength="100" formControlName="processSale" required>
+          <mat-error>Ingrese algún valor</mat-error>          
         </mat-form-field>
-        <mat-error *ngIf="form.controls['processSale'].hasError('processSale')">
-          Ingrese algún valor
-        </mat-error>
       </div>
     </div>
     <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
   </form>      
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions fxLayoutAlign="end">
   <div *ngIf="title != operationView">
-      <button mat-button mat-dialog-close (click)="save()" [disabled]="!form.valid" >{{title}}</button>
+    <button mat-raised-button color="primary" mat-dialog-close (click)="save()" [disabled]="!form.valid" >{{title}}</button>
   </div>  
   <button mat-button [mat-dialog-close]="true">CANCELAR</button>
 </mat-dialog-actions>

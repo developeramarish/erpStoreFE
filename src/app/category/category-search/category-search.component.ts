@@ -37,9 +37,10 @@ export class CategorySearchComponent extends Parent implements OnInit {
     private categoryProvider: CategoryProvider,
     public dialog: MatDialog) { 
     super();
-    this.actionView = "M00001";
+    this.actionView = "CAT001";
+    this.actionEdit = "CAT002";    
     //valid user and enterprise
-    if (!this.validateSession()){
+    if (!this.validateSession(this.actionView)){
       this.router.navigate(['/']);
     }
   }

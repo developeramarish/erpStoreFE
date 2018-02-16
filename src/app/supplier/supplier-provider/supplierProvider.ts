@@ -7,11 +7,11 @@ import 'rxjs/Rx';
 import {BrowserModule} from '@angular/platform-browser';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import { ENResult } from '../../core/class/ENResult';
-import { BrandMaintenanceComponent } from '../brand-maintenance/brand-maintenance.component'
+import { SupplierMaintenanceComponent } from '../supplier-maintenance/supplier-maintenance.component'
 
 
 @Injectable()
-export class BrandProvider {
+export class SupplierProvider {
     constructor(
       public dialog: MatDialog,
       private http: HttpClient,
@@ -19,12 +19,12 @@ export class BrandProvider {
 
     ) {}
 
-    searchBrand(IdBrand:number) {
+    searchSupplier(IdSupplier:number) {
       let promise =  new Promise((resolve, reject) => {
-        const url = this.coreProvider.getUrlBackEnd() + 'PRBrand/Search';
+        const url = this.coreProvider.getUrlBackEnd() + 'PRSupplier/Search';
         const body = JSON.stringify(
         {
-          idBrand: IdBrand,
+          idSupplier: IdSupplier,  
         });
         const headers = new HttpHeaders().
         set('Content-Type', 'application/json; charset=utf-8');    
@@ -37,7 +37,7 @@ export class BrandProvider {
             reject(err);
           }
         );
-      });   
-      return promise;   
-    }
+    });   
+    return promise;   
+  }
 }

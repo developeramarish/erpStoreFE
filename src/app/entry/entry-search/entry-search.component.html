@@ -3,13 +3,16 @@
     <div fxFlex="100%"  fxFlex.xs="100%">
       <mat-card class="example-card">
         <mat-card-header>        
-          <mat-card-title>UNIDAD - BUSQUEDA</mat-card-title>
+          <mat-card-title>INGRESO DE PRODUCTO - BUSQUEDA</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div fxLayout="row" fxLayout.xs="column">
             <div fxFlex="50%"  fxFlex.xs="100%">
-              <mat-form-field >
-                <input matInput type="text" placeholder="Nombre" formControlName="name" (keyup)="applyFilter($event.target.value)">
+              <mat-form-field>
+                <!--[matDatepickerFilter]="applyFilter($event.target.value)" -->
+                <input matInput [matDatepicker]="date" placeholder="Seleccione fecha" disabled>
+                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                <mat-datepicker #date disabled="false"></mat-datepicker>
               </mat-form-field>
             </div>
             <div fxFlex="50%"  fxFlex.xs="100%" [hidden]="!validateSession(actionEdit)">
@@ -21,30 +24,30 @@
           <div fxLayout="row">
             <diV fxFlex="100%">
               <mat-table #table [dataSource]="dataSource" matSort>                  
-                <ng-container matColumnDef="code">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header> Código </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.codeUnit}} </mat-cell>
+                <ng-container matColumnDef="date">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="name">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                <ng-container matColumnDef="entryType">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Entrada </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.entryType}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="button">
                   <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
                   <mat-cell *matCellDef="let element" fxLayoutAlign="end">
                     <button mat-icon-button (click)="viewItem(element)" matTooltip="Ver">
                       <mat-icon>visibility</mat-icon>
-                    </button>                       
-                    <div [hidden]="!validateSession(actionEdit)">
+                    </button>
+                    <div [hidden]="!validateSession(actionEdit)">                       
                       <button mat-icon-button (click)="updateItem(element)" matTooltip="Modificar" >
                         <mat-icon>mode_edit</mat-icon>
                       </button>
                     </div>
-                    <div [hidden]="!validateSession(actionEdit)">                    
+                    <div [hidden]="!validateSession(actionEdit)"> 
                       <button mat-icon-button (click)="deleteItem(element)" matTooltip="Eliminar">
                         <mat-icon>delete</mat-icon>
                       </button>
-                    </div>
+                    </div>  
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -57,5 +60,5 @@
       </mat-card>
     </div>
   </diV>
-  <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing> 
+  <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
 </form>

@@ -8,13 +8,13 @@
         <mat-card-content>
           <div fxLayout="row" fxLayout.xs="column">
             <div fxFlex="50%"  fxFlex.xs="100%">
-                <mat-form-field >
-                  <input matInput type="text" placeholder="Nombre" formControlName="name" (keyup)="applyFilter($event.target.value)">
-                </mat-form-field>
+              <mat-form-field >
+                <input matInput type="text" placeholder="Nombre" formControlName="name" (keyup)="applyFilter($event.target.value)">
+              </mat-form-field>
             </div>
-            <div fxFlex="50%"  fxFlex.xs="100%">
-              <button mat-raised-button color="primary" (click)="addItem()" >
-                <mat-icon>open_in_new</mat-icon> NUEVO
+            <div fxFlex="50%"  fxFlex.xs="100%" [hidden]="!validateSession(actionEdit)">
+              <button mat-raised-button color="primary" (click)="addItem()">
+                <mat-icon>plus_one</mat-icon> NUEVO
               </button>
             </div>              
           </div>
@@ -39,16 +39,20 @@
                 </ng-container>
                 <ng-container matColumnDef="button">
                   <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
-                  <mat-cell fxLayoutAlign="end" *matCellDef="let element">                       
-                    <button mat-icon-button (click)="updateItem(element)" matTooltip="Modificar" >
-                      <mat-icon>mode_edit</mat-icon>
-                    </button>
+                  <mat-cell fxLayoutAlign="end" *matCellDef="let element">      
                     <button mat-icon-button (click)="viewItem(element)" matTooltip="Ver">
-                      <mat-icon>visibility</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="deleteItem(element)" matTooltip="Eliminar">
-                      <mat-icon>delete</mat-icon>
-                    </button>
+                        <mat-icon>visibility</mat-icon>
+                      </button>                 
+                    <div [hidden]="!validateSession(actionEdit)">
+                      <button mat-icon-button (click)="updateItem(element)" matTooltip="Modificar">
+                        <mat-icon>mode_edit</mat-icon>
+                      </button>
+                    </div>
+                    <div  [hidden]="!validateSession(actionEdit)">
+                      <button mat-icon-button (click)="deleteItem(element)" matTooltip="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

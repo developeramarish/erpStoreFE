@@ -2,17 +2,17 @@
 <mat-dialog-content>
   <form [formGroup]="form" >
     <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
-      <div fxFlex="50%" fxLayout.xs="100%">
+      <div fxFlex="30%" fxLayout.xs="100%">
         <mat-form-field style="width: 80%">
-          <input matInput placeholder="Código de Unidad" formControlName="codeUnit" required>
+          <input matInput placeholder="Código de Unidad" maxlength="20" formControlName="codeUnit" required>
         </mat-form-field>
         <mat-error *ngIf="form.controls['codeUnit'].hasError('codeUnit')">
           Ingrese algun valor
         </mat-error>
       </div>
-      <div fxFlex="50%" fxLayout.xs="100%">
-        <mat-form-field style="width: 80%">
-          <input matInput placeholder="Nombre" formControlName="name" required>
+      <div fxFlex="70%" fxLayout.xs="100%">
+        <mat-form-field style="width: 100%">
+          <input matInput placeholder="Nombre" maxlength="100" formControlName="name" required>
         </mat-form-field>
         <mat-error *ngIf="form.controls['name'].hasError('name')">
           Ingrese algun valor
@@ -22,7 +22,7 @@
     <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
   </form>      
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions fxLayoutAlign="end">
   <div *ngIf="title != operationView">
     <button mat-raised-button color="primary" mat-dialog-close (click)="save()" [disabled]="!form.valid">{{title}}</button>
   </div>  
