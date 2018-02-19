@@ -19,8 +19,8 @@ export class CoreProvider{
     }
 
     getUrlBackEnd(): string{
-        return 'http://inkavebe.itcusco.com/';
-        //return 'http://localhost:49903/';
+        //return 'http://inkavebe.itcusco.com/';
+        return 'http://localhost:49903/';
     }
 
     getUser(): string {

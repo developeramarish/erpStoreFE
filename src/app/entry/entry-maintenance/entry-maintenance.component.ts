@@ -21,6 +21,7 @@ import { ENCategory } from '../../category/category-class/ENCategory';
 import { ProductProvider } from '../../product/product-provider/productProvider';
 import { ENProduct } from '../../product/product-class/ENProduct';
 import { ProductMaintenanceComponent } from '../../product/product-maintenance/product-maintenance.component';
+import { ENProductProperty } from '../../product/product-class/ENProductProperty';
 
 @Component({
   selector: 'itcusco-entry-maintenance',
@@ -32,6 +33,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   listStore: Array<ENStore>;
   listSupplier: Array<ENSupplier>;
   listDetail: Array<ENEntryDetail> = [];
+  listProperty: Array<ENProductProperty> = [];
   listCategory: Array<ENCategory>;
   listProduct: Array<ENProduct>;
   constructor
@@ -44,7 +46,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     private storeProvider: StoreProvider,
     private supplierProvider: SupplierProvider,
     private categoryProvider: CategoryProvider,
-    private productPRovider: ProductProvider,
+    private productProvider: ProductProvider,
     public dialog: MatDialog
   ) 
   { 
@@ -101,6 +103,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
           value: temp.date,
           disabled: this.disabledEdit
         }, Validators.required],
+        product: [''],
         listDetail: this.formBuilder.array([]),
       });
       this.entryProvider.searchEntry(temp.idEntry)
@@ -131,7 +134,8 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
                 dueDate: [{
                   value: listDetail[i].dueDate,
                   disabled: this.disabledEdit
-                }]
+                }],
+                listProperty: this.formBuilder.array([]),
               })
             )
           }
@@ -140,7 +144,8 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
           this.coreProvider.showMessageError((<ENResult>data).message);
         }
         
-      })
+      });
+      
     }else{
       this.form = this.formBuilder.group({
         idEntry: [0],
@@ -148,8 +153,10 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         idSourceStore: ['', Validators.required],        
         entryType: ['', Validators.required],
         date: ['', Validators.required],
-        idCategory: [0],
-        listDetail: this.formBuilder.array([])
+        idCategory: ['',Validators.required],
+        product: ['',Validators.required],
+        listDetail: this.formBuilder.array([]),
+        listProperty: this.formBuilder.array([]),
       });
     }
   }
@@ -293,17 +300,30 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   addRowDetail(): void{
     const control = <FormArray>this.form.controls['listDetail'];
     control.push(this.initDetail());
+    var product: number = this.form.controls['product'].value;
+    this.form.controls['product'].setValue(null);
   }
 
   initDetail(): FormGroup {
     return this.formBuilder.group({
-      idProduct:  ['', Validators.required],
+      idProduct: [{
+        value: this.form.value.product,
+        disabled: true}, Validators.required],
       quantity:  ['', Validators.required],
       purchasePrice:  ['', Validators.required],
       dueDate:'',
-    });
+    });    
   }
 
+  deleteDetail(index): void
+  {
+    const control = <FormArray>this.form.controls['listProperty'];         
+    //if (control.at(index).get('idProperty').value > 0)
+    //{
+      //this.listPropertyDelete.push(control.at(index).value);
+      control.removeAt(index);
+   // }
+  }
   getCategory(controlProcessing: boolean): void{
     if(controlProcessing == true){
       this.showProcessing = true;
@@ -330,7 +350,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     if(controlProcessing == true){
       this.showProcessing = true;
     }
-    this.productPRovider.searchProductCategory(this.form.value.idCategory)
+    this.productProvider.searchProductCategory(this.form.value.idCategory)
     .then(<ENResult>(data) =>{
       if(controlProcessing == true){
         this.showProcessing = false;
@@ -360,5 +380,46 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.getProduct(true);
     });
+  }
+
+  getProductProperty(idProduct: number){
+    this.productProvider.searchProperty(idProduct)
+    .then(data  => {          
+      this.showProcessing = false;
+      if((<ENResult>data).code == 0){
+        var listProperty: Array<ENProductProperty> = <Array<ENProductProperty>>(<ENResult>data).result;
+        const control = <FormArray>this.form.controls['listProperty'];
+        for (var i =0; i<listProperty.length; i++){
+          control.push(
+            this.formBuilder.group({
+              idProduct: [{
+                value: listProperty[i].idProduct,
+                disabled: this.disabledEdit
+              }],
+              idProperty: [{
+                value: listProperty[i].idProperty, 
+                disabled: this.disabledEdit
+              }],
+              name: [{
+                value: listProperty[i].name,
+                disabled: this.disabledEdit
+              }],
+              abbreviation: [{
+                value: listProperty[i].abbreviation,
+                disabled: this.disabledEdit
+              }],          
+              required: [{
+                value: listProperty[i].required,
+                disabled: this.disabledEdit
+              }]
+            })
+          )
+        }
+      }
+      else
+      {
+        this.coreProvider.showMessageError((<ENResult>data).message);
+      }
+    })
   }
 }

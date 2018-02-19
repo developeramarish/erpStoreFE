@@ -23,6 +23,8 @@ import { StoreMaintenanceComponent } from '../../store/store-maintenance/store-m
 import { StoreMaintenanceModule } from '../../store/store-maintenance/store-maintenance.module';
 import { SupplierMaintenanceComponent } from '../../supplier/supplier-maintenance/supplier-maintenance.component';
 import { SupplierMaintenanceModule } from '../../supplier/supplier-maintenance/supplier-maintenance.module';
+import { ProductMaintenanceComponent } from '../../product/product-maintenance/product-maintenance.component';
+import { ProductMaintenanceModule } from '../../product/product-maintenance/product-maintenance.module';
 
 const routes: Routes = [
   { path: 'entryMaintenance', component: EntryMaintenanceComponent}
@@ -50,10 +52,11 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forChild(routes),
     StoreMaintenanceModule,
-    SupplierMaintenanceModule
+    SupplierMaintenanceModule,
+    ProductMaintenanceModule
   ],
   declarations: [EntryMaintenanceComponent],
-  entryComponents: [EntryMaintenanceComponent, StoreMaintenanceComponent, SupplierMaintenanceComponent],
+  entryComponents: [EntryMaintenanceComponent, StoreMaintenanceComponent, SupplierMaintenanceComponent, ProductMaintenanceComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
