@@ -14,6 +14,10 @@ import { ProductSearchModule } from '../../product/product-search/product-search
 import { SupplierSearchModule } from '../../supplier/supplier-search/supplier-search.module';
 import { EntrySearchModule } from '../../entry/entry-search/entry-search.module';
 import { EntryMaintenanceModule } from '../../entry/entry-maintenance/entry-maintenance.module';
+import { CashSearchModule } from '../../cash/cash-search/cash-search.module';
+import { SaleSearchModule } from '../../sale/sale-search/sale-search.module';
+import { CashOpenCloseModule } from '../../cash/cash-open-close/cash-open-close.module';
+
 const routes: Routes = [
   {
     path:'',
@@ -54,6 +58,18 @@ const routes: Routes = [
       {
         path:'',
         loadChildren:'./../../entry/entry-maintenance/entry-maintenance.module#EntryMaintenanceModule'
+      },
+      {
+        path:'cashSearch',
+        loadChildren:'./../../cash/cash-search/cash-search.module#CashSearchModule'
+      },
+      {
+        path:'saleSearch',
+        loadChildren:'./../../sale/sale-search/sale-search.module#SaleSearchModule'
+      },
+      {
+        path:'colletSale',
+        loadChildren:'./../../cash/cash-open-close/cash-open-close.module#CashOpenCloseModule'
       }
     ]
   },

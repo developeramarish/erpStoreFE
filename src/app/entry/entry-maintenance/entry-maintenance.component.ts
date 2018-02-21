@@ -33,7 +33,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   listStore: Array<ENStore>;
   listSupplier: Array<ENSupplier>;
   listDetail: Array<ENEntryDetail> = [];
-  listProperty: Array<ENProductProperty> = [];
+  listDetailProperty: Array<ENProductProperty> = [];
   listCategory: Array<ENCategory>;
   listProduct: Array<ENProduct>;
   constructor
@@ -83,7 +83,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     Promise.all([
       this.getStore(false), 
       this.getSupplier(false),
-      this.getCategory(false),
+      this.getCategory(false)
     ]).then(res=>{
       this.showProcessing = false;
     })  
@@ -103,7 +103,6 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
           value: temp.date,
           disabled: this.disabledEdit
         }, Validators.required],
-        product: [''],
         listDetail: this.formBuilder.array([]),
       });
       this.entryProvider.searchEntry(temp.idEntry)
@@ -112,6 +111,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         if((<ENResult>data).code == 0){
           var listDetail: Array<ENEntryDetail> = <Array<ENEntryDetail>>(<ENResult>data).result;
           const control = <FormArray>this.form.controls['listDetail'];
+          alert(JSON.stringify(listDetail));
           for (var i =0; i<listDetail.length; i++){
             control.push(
               this.formBuilder.group({
@@ -121,6 +121,10 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
                 }],
                 idProduct: [{
                   value: listDetail[i].idProduct,
+                  disabled: this.disabledEdit
+                }],
+                name: [{
+                  value: listDetail[i].nameProduct,
                   disabled: this.disabledEdit
                 }],
                 quantity: [{
@@ -133,9 +137,9 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
                 }],          
                 dueDate: [{
                   value: listDetail[i].dueDate,
-                  disabled: this.disabledEdit
+                  disabled: this.disabledEdit || !listDetail[i].perishable
                 }],
-                listProperty: this.formBuilder.array([]),
+                listDetailProperty: this.formBuilder.array([]),
               })
             )
           }
@@ -152,11 +156,11 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         idSourceSupplier: ['', Validators.required],
         idSourceStore: ['', Validators.required],        
         entryType: ['', Validators.required],
-        date: ['', Validators.required],
+        date: [new Date(), Validators.required],
         idCategory: ['',Validators.required],
         product: ['',Validators.required],
         listDetail: this.formBuilder.array([]),
-        listProperty: this.formBuilder.array([]),
+        listDetailProperty: this.formBuilder.array([]),
       });
     }
   }
@@ -300,6 +304,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   addRowDetail(): void{
     const control = <FormArray>this.form.controls['listDetail'];
     control.push(this.initDetail());
+    this.getProductProperty(this.form.value.product);
     var product: number = this.form.controls['product'].value;
     this.form.controls['product'].setValue(null);
   }
@@ -309,18 +314,20 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
       idProduct: [{
         value: this.form.value.product,
         disabled: true}, Validators.required],
+        
       quantity:  ['', Validators.required],
       purchasePrice:  ['', Validators.required],
       dueDate:'',
-    });    
+      listDetailProperty: this.formBuilder.array([]),
+    }); 
   }
 
   deleteDetail(index): void
   {
-    const control = <FormArray>this.form.controls['listProperty'];         
+    const control = <FormArray>this.form.controls['listDetailProperty'];         
     //if (control.at(index).get('idProperty').value > 0)
     //{
-      //this.listPropertyDelete.push(control.at(index).value);
+      //this.listDetailPropertyDelete.push(control.at(index).value);
       control.removeAt(index);
    // }
   }
@@ -383,33 +390,35 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   }
 
   getProductProperty(idProduct: number){
+    this.showProcessing = true;
     this.productProvider.searchProperty(idProduct)
     .then(data  => {          
       this.showProcessing = false;
       if((<ENResult>data).code == 0){
-        var listProperty: Array<ENProductProperty> = <Array<ENProductProperty>>(<ENResult>data).result;
-        const control = <FormArray>this.form.controls['listProperty'];
-        for (var i =0; i<listProperty.length; i++){
+        var listDetailProperty: Array<ENProductProperty> = <Array<ENProductProperty>>(<ENResult>data).result;
+        const lengthArray = (<FormArray>this.form.controls['listDetail']).length;
+        let control = (<FormArray>(<FormArray>this.form.controls['listDetail']).at(lengthArray-1).get('listDetailProperty'));
+        for (var i =0; i<listDetailProperty.length; i++){
           control.push(
             this.formBuilder.group({
               idProduct: [{
-                value: listProperty[i].idProduct,
+                value: listDetailProperty[i].idProduct,
                 disabled: this.disabledEdit
               }],
               idProperty: [{
-                value: listProperty[i].idProperty, 
+                value: listDetailProperty[i].idProperty, 
                 disabled: this.disabledEdit
               }],
               name: [{
-                value: listProperty[i].name,
+                value: listDetailProperty[i].name,
                 disabled: this.disabledEdit
               }],
               abbreviation: [{
-                value: listProperty[i].abbreviation,
+                value: listDetailProperty[i].abbreviation,
                 disabled: this.disabledEdit
               }],          
-              required: [{
-                value: listProperty[i].required,
+              value: [{
+                value: '',
                 disabled: this.disabledEdit
               }]
             })

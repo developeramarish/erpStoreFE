@@ -101,7 +101,7 @@
           </mat-form-field>
         </div>
         <div *ngIf="title != operationView" fxLayoutAlign="center center">
-          <button mat-button color="primary" (click)="addRowDetail()" [disabled]="!form.valid"><mat-icon>add</mat-icon>Agregar Producto</button>          
+          <button mat-button color="primary" (click)="addRowDetail()"><mat-icon>add</mat-icon>Agregar Producto</button>          
         </div>   
       </div>
       <hr>
@@ -124,13 +124,13 @@
                 </td>
                 <td>
                   <mat-form-field fxLayoutAlign="center">
-                    <input matInput placeholder="Producto" formControlName="idProduct" required>
+                    <input matInput formControlName="idProduct" required>
                   </mat-form-field>
                 </td>
                 <td>
-                  <table formArrayName="listProperty">
-                    <tr *ngFor="let property of listProperty['control']; let $indexProperty=index" [formGroupName]="$indexProperty">  
-                      <td> {{ property.control.name.value }} </td>
+                  <table formArrayName="listDetailProperty">
+                    <tr *ngFor="let property of detail['controls'].listDetailProperty['controls']; let $indexProperty=index" [formGroupName]="$indexProperty">  
+                      <td> {{ property.controls.abbreviation.value }} </td>
                       <td> 
                         <mat-form-field fxLayoutAlign="center">
                           <input matInput placeholder="Valor" formControlName="value" required>

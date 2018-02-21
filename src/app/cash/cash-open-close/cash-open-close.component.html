@@ -1,0 +1,54 @@
+<mat-card>
+  <mat-card-title> INGRESO DE PRODUCTOS - {{title}} </mat-card-title>
+  <form [formGroup]="form">
+    <mat-card-content>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
+        <div fxFlex="50%">
+          <mat-form-field>
+            <!--[matDatepickerFilter]="applyFilter($event.target.value)" -->
+            <input matInput [matDatepicker]="date" formControlName="date" placeholder="Seleccione fecha" required>
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date disabled="false"></mat-datepicker>
+            <mat-error> Ingrese algún valor</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+          <mat-form-field style="width: 70%">
+            <mat-select placeholder="Caja" formControlName="idCash" name="cash" required>
+              <mat-option *ngFor="let cash of listCash" [value]="cash.idCash">
+                {{ cash.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error> Ingrese algún valor</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayout.xs="row">
+        <div fxFlex="50%">
+          <mat-form-field style="width: 100%">
+            <input matInput placeholder="Importe del sistema" type="number" formControlName="amount" required>
+            <mat-error>Ingrese algún valor</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+          <mat-form-field style="width: 100%">
+            <input matInput placeholder="Importe real" type="number" formControlName="amountOpening" required>
+            <mat-error>Ingrese algún valor</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayout.xs="row">
+        <mat-form-field>
+          <textarea matInput placeholder="Observaciones" maxlength="100" formControlName="concept"></textarea>
+        </mat-form-field>          
+      </div>
+    </mat-card-content>
+    <mat-card-actions fxLayoutAlign="end">
+      <div *ngIf="title != operationView">
+        <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid" >{{title}}</button>
+      </div>  
+      <button mat-button>CANCELAR</button>
+    </mat-card-actions>
+    <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
+  </form>
+</mat-card>
