@@ -2,7 +2,7 @@ export class ENEntryDetail
 {
     idEntry: number;
     idProduct: number;
-    nameProduct: string;
+    name: string;
     perishable: boolean;
     quantity: number;
     purchasePrice: number;

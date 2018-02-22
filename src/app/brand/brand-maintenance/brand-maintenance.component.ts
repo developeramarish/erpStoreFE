@@ -15,14 +15,15 @@ import { ENResult } from '../../core/class/ENResult';
   providers: [ CoreProvider ]
 })
 export class BrandMaintenanceComponent extends Parent implements OnInit {
-  constructor(
+  constructor
+  (
     public dialogRef: MatDialogRef<BrandMaintenanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private formBuilder: FormBuilder, 
     private http: HttpClient, 
-    private coreProvider: CoreProvider) { 
-      super();
-    }
+    private coreProvider: CoreProvider
+  ) 
+  { super(); }
 
   ngOnInit() {
     this.title = this.data["operation"];
@@ -90,17 +91,14 @@ export class BrandMaintenanceComponent extends Parent implements OnInit {
     this.http.post<ENResult>(url, body, {headers: headers}).
       subscribe(data => {
         this.showProcessing = false;
-        if (data.code == 0){
+        if (data.code == 0)
+        {
           this.coreProvider.showMessageOK();
           this.dialogRef.close();
-        }else{
-          
-          this.coreProvider.showMessageError(data.message);
         }
+        else { this.coreProvider.showMessageError(data.message); }
       },
-      (err) => {        
-        this.coreProvider.showMessageErrorUnexpected();        
-      }
-      );
+      (err) => { this.coreProvider.showMessageErrorUnexpected(); }
+    );
   }
 }

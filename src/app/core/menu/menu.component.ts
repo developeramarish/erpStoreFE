@@ -58,7 +58,7 @@ constructor(private router: Router) {
     case '/home/unitSearch':
       localStorage.setItem('unitOperation','');  
       break;
-    case  '/home/globalParametersMaintenance':
+    case  '/home/globalParametersSearch':
       localStorage.setItem('globalParameterOperation', this.operationUpdate);
       break;
     case'/home/userSearch': 

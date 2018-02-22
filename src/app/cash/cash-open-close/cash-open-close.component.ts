@@ -91,8 +91,8 @@ export class CashOpenCloseComponent extends Parent implements OnInit {
   }
   
   buildForm(): void {
-    if (this.data["info"] != null){
-      var temp:ENCashMovement= <ENCashMovement>this.data["info"];
+    if (null != null){
+      var temp:ENCashMovement;
       this.form = this.formBuilder.group({
         idMovement: [temp.idMovement],
         idCash: [{

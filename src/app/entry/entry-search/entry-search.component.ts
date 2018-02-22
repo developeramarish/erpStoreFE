@@ -22,7 +22,7 @@ export class EntrySearchComponent extends Parent implements OnInit {
 
   listItem: Array<ENEntry> = [];
   dataSource: MatTableDataSource<ENEntry>;
-  displayedColumns = ['date','entryType','button'];
+  displayedColumns = ['date','entryType','store','supplier','button'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -59,7 +59,7 @@ export class EntrySearchComponent extends Parent implements OnInit {
     this.entryProvider.searchEntry(0)
     .then(data =>{
       this.showProcessing = false;
-      this.listItem = <Array<ENEntry>>(<ENResult>data).result;          
+      this.listItem = <Array<ENEntry>>(<ENResult>data).result;         
       this.dataSource = new MatTableDataSource(this.listItem);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -70,27 +70,28 @@ export class EntrySearchComponent extends Parent implements OnInit {
   }
 
   updateItem(item){
-    this.router.navigate(['entryMaintenance']); 
+    this.router.navigate(['home/entryMaintenance']); 
     localStorage.setItem("entryOperation", this.operationUpdate);
-    localStorage.setItem("idEntry", item.idEntry);
+    localStorage.setItem("entry", JSON.stringify(item));
   }
 
   viewItem(item){
-    this.router.navigate(['entryMaintenance']); 
+    alert(JSON.stringify(item));
+    this.router.navigate(['home/entryMaintenance']); 
     localStorage.setItem("entryOperation", this.operationView);
-    localStorage.setItem("idEntry", item.idEntry);
+    localStorage.setItem("entry", JSON.stringify(item));
   }
   
   deleteItem(item){
-    this.router.navigate(['entryMaintenance']); 
+    this.router.navigate(['home/entryMaintenance']); 
     localStorage.setItem("entryOperation", this.operationDelete);
-    localStorage.setItem("idEntry", item.idEntry);
+    localStorage.setItem("entry", JSON.stringify(item));
   }
 
   addItem() {
     this.router.navigate(['home/entryMaintenance']); 
     localStorage.setItem("entryOperation", this.operationNew);
-    localStorage.setItem("idEntry", '0');
+    localStorage.setItem("entry", "");
   }
 
   buildForm(): void {

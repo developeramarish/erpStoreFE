@@ -19,12 +19,48 @@ export class EntryProvider {
 
     ) {}
 
-    searchEntry(IdEntry:number) {
+    searchEntry(idEntry:number) {
       let promise =  new Promise((resolve, reject) => {
-        const url = this.coreProvider.getUrlBackEnd() + 'PREntry/Search';
+        const url = this.coreProvider.getUrlBackEnd() + 'PREntry/search';
         const body = JSON.stringify(
         {
-          idEntry: IdEntry
+          idEntry: idEntry
+        });
+        const headers = new HttpHeaders().
+        set('Content-Type', 'application/json; charset=utf-8');    
+        this.http.post<ENResult>(url, body, {headers: headers})
+        .toPromise()
+        .then(  data => { resolve(data); },
+                err => { reject(err); }
+            );
+      });   
+      return promise; 
+    }
+
+    searchEntryDetail(idEntry:number) {
+      let promise =  new Promise((resolve, reject) => {
+        const url = this.coreProvider.getUrlBackEnd() + 'PREntry/searchDetail';
+        const body = JSON.stringify(
+        {
+          idEntry: idEntry
+        });
+        const headers = new HttpHeaders().
+        set('Content-Type', 'application/json; charset=utf-8');    
+        this.http.post<ENResult>(url, body, {headers: headers})
+        .toPromise()
+        .then(  data => { resolve(data); },
+                err => { reject(err); }
+            );
+      });   
+      return promise; 
+    }
+
+    searchEntryDetailProperty(idEntry:number) {
+      let promise =  new Promise((resolve, reject) => {
+        const url = this.coreProvider.getUrlBackEnd() + 'PREntry/searchDetailProperty';
+        const body = JSON.stringify(
+        {
+          idEntry: idEntry
         });
         const headers = new HttpHeaders().
         set('Content-Type', 'application/json; charset=utf-8');    

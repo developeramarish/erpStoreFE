@@ -47,7 +47,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     private supplierProvider: SupplierProvider,
     private categoryProvider: CategoryProvider,
     private productProvider: ProductProvider,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) 
   { 
     super(); 
@@ -56,7 +56,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     if (!this.validateSession(this.actionEdit)){
       this.router.navigate(['/']);
     } 
-   }
+  }
 
   ngOnInit() {
     this.title = localStorage.getItem("entryOperation");
@@ -90,29 +90,52 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   }
 
   buildForm(): void {
-    if (null != null){
-      var temp:ENEntry;//= <ENEntry>this.data["info"];
-      this.form = this.formBuilder.group({
-        idEntry: [temp.idEntry],
-        idSource: [temp.idSource, Validators.required],
-        entryType: [{
-          value: temp.entryType,
-          disabled: this.disabledEdit
-        }, Validators.required],
-        date:[{
-          value: temp.date,
-          disabled: this.disabledEdit
-        }, Validators.required],
-        listDetail: this.formBuilder.array([]),
-      });
-      this.entryProvider.searchEntry(temp.idEntry)
+    let temp:ENEntry;
+    if (this.title != this.operationNew){
+      temp = <ENEntry>JSON.parse(localStorage.getItem("entry"));
+    } else {
+      temp = new ENEntry();
+      temp.idEntry = 0;
+      temp.date = new Date();
+    }
+    this.form = this.formBuilder.group({
+      idEntry: [temp.idEntry],
+      idStore: [{
+        value: temp.idStore,
+        disabled: this.disabledEdit
+      }],
+      idSupplier: [{
+        value: temp.idSupplier,
+        disabled: this.disabledEdit
+      }],      
+      entryType: [{
+        value: temp.entryType,
+        disabled: this.disabledEdit
+      }, Validators.required],
+      date:[{
+        value: temp.date,
+        disabled: this.disabledEdit
+      }, Validators.required],
+      idCategory:[{
+        value: null,
+        disabled: this.disabledEdit
+      }],
+      idProduct:[{
+        value: null,
+        disabled: this.disabledEdit
+      }],
+      listDetail: this.formBuilder.array([]),
+    });
+    if (this.title != this.operationNew){
+      this.entryProvider.searchEntryDetail(temp.idEntry)
       .then(data  => {          
         this.showProcessing = false;
         if((<ENResult>data).code == 0){
           var listDetail: Array<ENEntryDetail> = <Array<ENEntryDetail>>(<ENResult>data).result;
-          const control = <FormArray>this.form.controls['listDetail'];
           alert(JSON.stringify(listDetail));
+          const control = <FormArray>this.form.controls['listDetail'];
           for (var i =0; i<listDetail.length; i++){
+            let disabledPerishable: Boolean = this.disabledEdit || !listDetail[i].perishable;
             control.push(
               this.formBuilder.group({
                 idEntry: [{
@@ -124,7 +147,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
                   disabled: this.disabledEdit
                 }],
                 name: [{
-                  value: listDetail[i].nameProduct,
+                  value: listDetail[i].name,
                   disabled: this.disabledEdit
                 }],
                 quantity: [{
@@ -137,7 +160,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
                 }],          
                 dueDate: [{
                   value: listDetail[i].dueDate,
-                  disabled: this.disabledEdit || !listDetail[i].perishable
+                  disabled: disabledPerishable
                 }],
                 listDetailProperty: this.formBuilder.array([]),
               })
@@ -146,21 +169,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         }
         else{
           this.coreProvider.showMessageError((<ENResult>data).message);
-        }
-        
-      });
-      
-    }else{
-      this.form = this.formBuilder.group({
-        idEntry: [0],
-        idSourceSupplier: ['', Validators.required],
-        idSourceStore: ['', Validators.required],        
-        entryType: ['', Validators.required],
-        date: [new Date(), Validators.required],
-        idCategory: ['',Validators.required],
-        product: ['',Validators.required],
-        listDetail: this.formBuilder.array([]),
-        listDetailProperty: this.formBuilder.array([]),
+        }   
       });
     }
   }
@@ -169,19 +178,29 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     var url:string;
     var body;
     if (this.title == this.operationNew || this.title == this.operationUpdate){
+      let tempIdSupplier = 0;
+      let tempIdStore = 0;
+      if (this.form.value.entryType == "compra"){
+        tempIdSupplier = this.form.value.idSupplier;
+      }else{
+        tempIdStore = this.form.value.idStore 
+      }
       var info = {
         id: this.form.value.idEntry,
-        idSource: this.form.value.idSource,
+        idStore: tempIdStore,
+        idSupplier: tempIdSupplier,
         entryType: this.form.value.entryType,
-        date: this.form.value.date
+        date: this.form.value.date,
+        listDetail: this.form.value.listDetail     
       };
       if (this.title == this.operationUpdate){
         url = this.coreProvider.getUrlBackEnd() + 'PREntry/update'; 
       }else{
-        url = this.coreProvider.getUrlBackEnd() + 'PREntry/insert';    
+        url = this.coreProvider.getUrlBackEnd() + 'PREntry/insert';   
         delete info.id;
       }  
-      body = JSON.stringify(info);    
+      body = JSON.stringify(info);
+      alert(body);
     }
     if (this.title == this.operationDelete){
       url = this.coreProvider.getUrlBackEnd() + 'PREntry/delete';    
@@ -196,6 +215,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         this.showProcessing = false;
         if (data.code == 0){
           this.coreProvider.showMessageOK();
+          this.router.navigate(['home/entrySearch']); 
         }else{
           this.coreProvider.showMessageError(data.message);
         }
@@ -250,25 +270,25 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     });
   }
 
-  disabledSource() {
+  disabledSource() 
+  {
     var entryType: string =  this.form.controls['entryType'].value;
-    
-    if (entryType == '' ){
-      this.form.controls['idSourceSupplier'].disable();
-      this.form.controls['idSourceStore'].disable(); 
+    if (entryType == null ){
+      this.form.controls['idSupplier'].disable();
+      this.form.controls['idStore'].disable(); 
     }
     else{
       if (entryType == 'compra'){
-        this.form.controls['idSourceSupplier'].enable();
-        this.form.controls['idSourceStore'].disable(); 
-        this.form.controls['idSourceSupplier'].setValidators(Validators.required);
-        this.form.controls['idSourceStore'].setValue(null);
+        this.form.controls['idSupplier'].enable();
+        this.form.controls['idStore'].disable(); 
+        this.form.controls['idSupplier'].setValidators(Validators.required);
+        this.form.controls['idStore'].setValue(null);
       }
       if (entryType == 'traslado'){
-        this.form.controls['idSourceStore'].enable();
-        this.form.controls['idSourceSupplier'].disable();
-        this.form.controls['idSourceStore'].setValidators(Validators.required);
-        this.form.controls['idSourceSupplier'].setValue(null);
+        this.form.controls['idStore'].enable();
+        this.form.controls['idSupplier'].disable();
+        this.form.controls['idStore'].setValidators(Validators.required);
+        this.form.controls['idSupplier'].setValue(null);
       }
     }
   }
@@ -303,34 +323,54 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
 
   addRowDetail(): void{
     const control = <FormArray>this.form.controls['listDetail'];
-    control.push(this.initDetail());
-    this.getProductProperty(this.form.value.product);
-    var product: number = this.form.controls['product'].value;
-    this.form.controls['product'].setValue(null);
+    this.showProcessing = true;
+    this.productProvider.searchProductById(this.form.value.idProduct)
+    .then(<ENResult>(data) =>{
+      this.showProcessing = false;  
+      if (data.code == 0)
+      {
+        var tempProduct: ENProduct = (<ENProduct>data.result);
+        control.push(this.formBuilder.group({      
+          idProduct: [this.form.value.idProduct],
+          name: [tempProduct.name],
+          quantity:  ['', Validators.required],
+          purchasePrice:  ['', Validators.required],
+          dueDate:[{ 
+            value: null, 
+            disabled: this.disabledEdit || !tempProduct.perishable
+          }],
+          listDetailProperty: this.formBuilder.array([]),
+        }));
+        this.getProductProperty(this.form.value.idProduct);
+      }
+      else
+      {
+        this.coreProvider.showMessageError(data.message);
+      }      
+    }).catch( error => {
+      this.showProcessing = false;
+      this.coreProvider.showMessageErrorUnexpected();
+    });
   }
 
-  initDetail(): FormGroup {
-    return this.formBuilder.group({
-      idProduct: [{
-        value: this.form.value.product,
-        disabled: true}, Validators.required],
-        
-      quantity:  ['', Validators.required],
-      purchasePrice:  ['', Validators.required],
-      dueDate:'',
-      listDetailProperty: this.formBuilder.array([]),
-    }); 
+  disabledAddProperty(): boolean
+  {
+    if (this.form.controls['idCategory'].value == null || this.form.controls['idProduct'].value == null)
+    {
+      return true;
+    }
   }
 
   deleteDetail(index): void
   {
-    const control = <FormArray>this.form.controls['listDetailProperty'];         
+    const control = <FormArray>this.form.controls['listDetail'];         
     //if (control.at(index).get('idProperty').value > 0)
     //{
       //this.listDetailPropertyDelete.push(control.at(index).value);
       control.removeAt(index);
-   // }
+    //}
   }
+
   getCategory(controlProcessing: boolean): void{
     if(controlProcessing == true){
       this.showProcessing = true;
@@ -430,5 +470,10 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         this.coreProvider.showMessageError((<ENResult>data).message);
       }
     })
+  }
+  
+  back(): void
+  {
+    this.router.navigate(['home/entrySearch']);
   }
 }

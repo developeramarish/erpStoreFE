@@ -19,12 +19,30 @@ export class ProductProvider {
 
     ) {}
 
-  searchProduct(IdProduct:number) {
+  searchProduct(idProduct:number) {
     let promise =  new Promise((resolve, reject) => {
       const url = this.coreProvider.getUrlBackEnd() + 'PRProduct/search';
       const body = JSON.stringify(
       {
-        IdProduct: IdProduct
+        idProduct: idProduct
+      });
+      const headers = new HttpHeaders().
+      set('Content-Type', 'application/json; charset=utf-8');    
+      this.http.post<ENResult>(url, body, {headers: headers})
+      .toPromise()
+      .then(data => { resolve(data); },
+            err => { reject(err); }
+      );
+    });   
+    return promise;   
+  }
+
+  searchProductById(idProduct:number) {
+    let promise =  new Promise((resolve, reject) => {
+      const url = this.coreProvider.getUrlBackEnd() + 'PRProduct/searchProductById';
+      const body = JSON.stringify(
+      {
+        idProduct: idProduct
       });
       const headers = new HttpHeaders().
       set('Content-Type', 'application/json; charset=utf-8');    
@@ -55,12 +73,12 @@ export class ProductProvider {
     return promise;   
   }
 
-  searchProperty(IdProduct:number) {
+  searchProperty(idProduct:number) {
     let promise =  new Promise((resolve, reject) => {
       const url = this.coreProvider.getUrlBackEnd() + 'PRProductProperty/search';
       const body = JSON.stringify(
       {
-        idProduct: IdProduct
+        idProduct: idProduct
       });
       const headers = new HttpHeaders().
       set('Content-Type', 'application/json; charset=utf-8');    

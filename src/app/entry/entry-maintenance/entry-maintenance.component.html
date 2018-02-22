@@ -1,10 +1,21 @@
-<mat-card>
-  <mat-card-title> INGRESO DE PRODUCTOS - {{title}} </mat-card-title>
-  <form [formGroup]="form">
+<form [formGroup]="form">
+  <mat-card>
+    <mat-card-title>
+      <div fxLayout="row" fxLayout.xs="column">
+        <div fxFlex="50%"  fxFlex.xs="100%">
+          INGRESO DE PRODUCTO - {{title}}
+        </div>
+        <div fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="end center">
+          <div *ngIf="title != operationView">
+            <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid">{{title}}</button>&nbsp;&nbsp;
+          </div>  
+          <button mat-button (click)="back()">CANCELAR</button>
+        </div>
+      </div>
+    </mat-card-title>
     <mat-card-content>
       <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
         <mat-form-field >
-          <!--[matDatepickerFilter]="applyFilter($event.target.value)" -->
           <input matInput [matDatepicker]="date" formControlName="date" placeholder="Seleccione fecha" required>
           <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
           <mat-datepicker #date disabled="false"></mat-datepicker>
@@ -27,7 +38,7 @@
           <div fxLayout="column" fxLayout.sm="column" fxLayout.xs="column">
             <div fxFlex="100%" fxLayout.xs="100%">
               <mat-form-field style="width: 70%">
-                <mat-select placeholder="Proveedor" formControlName="idSourceSupplier" name="supplier" required>
+                <mat-select placeholder="Proveedor" formControlName="idSupplier" name="supplier" required>
                   <mat-option *ngFor="let supplier of listSupplier" [value]="supplier.idSupplier">
                     {{supplier.name}}
                   </mat-option>
@@ -45,7 +56,7 @@
             </div>
             <div fxFlex="100%" fxLayout.xs="100%">
               <mat-form-field style="width: 70%">
-                <mat-select placeholder="Tienda" formControlName="idSourceStore" name="store" required>
+                <mat-select placeholder="Tienda" formControlName="idStore" name="store" required>
                   <mat-option *ngFor="let store of listStore" [value]="store.idStore">
                     {{store.name}}
                   </mat-option>
@@ -68,7 +79,7 @@
       <div fxLayout="row" fxLayout.sm="row" fxLayout.xs="column">
         <div fxFlex="30%">
           <mat-form-field style="width: 80%">
-            <mat-select placeholder="Categoria" formControlName="idCategory" name="category" required (change)="getProduct()">
+            <mat-select placeholder="Categoria" formControlName="idCategory" name="idCategory" required (change)="getProduct()">
               <mat-option *ngFor="let category of listCategory" [value]="category.idCategory">
                 {{category.name}}
               </mat-option>
@@ -78,7 +89,7 @@
         </div>
         <div fxFlex="30%" fxLayout.xs="100%">
           <mat-form-field style="width: 70%">
-            <mat-select placeholder="Productos" name="product" formControlName="product" required>
+            <mat-select placeholder="Producto" name="idProduct" formControlName="idProduct" required>
               <mat-option *ngFor="let product of listProduct" [value]="product.idProduct">
                 {{product.name}}
               </mat-option>
@@ -101,73 +112,62 @@
           </mat-form-field>
         </div>
         <div *ngIf="title != operationView" fxLayoutAlign="center center">
-          <button mat-button color="primary" (click)="addRowDetail()"><mat-icon>add</mat-icon>Agregar Producto</button>          
+          <button mat-button color="primary" (click)="addRowDetail()" [disabled]="disabledAddProperty()"><mat-icon>add</mat-icon>Agregar Producto</button>          
         </div>   
       </div>
       <hr>
       <div fxLayout="row" fxLayout.xs="100%">
-          <table formArrayName="listDetail" style="width: 100%">
-            <thead>
-              <th colspan="1"></th>              
-              <th align="tex-center">Producto</th>
-              <th align="tex-center">Propiedades</th>
-              <th align="tex-center">Cantidad</th>
-              <th align="tex-center">Precio de compra</th>
-              <th align="tex-center">Fecha de vencimiento</th>                            
-            </thead>
-            <tbody>
-              <tr *ngFor="let detail of form['controls'].listDetail['controls']; let $index=index" [formGroupName]="$index">
-                <td>
-                  <button  *ngIf="title != operationView" mat-icon-button (click)="deleteDetail($index)" matTooltip="Eliminar">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-                <td>
-                  <mat-form-field fxLayoutAlign="center">
-                    <input matInput formControlName="idProduct" required>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <table formArrayName="listDetailProperty">
-                    <tr *ngFor="let property of detail['controls'].listDetailProperty['controls']; let $indexProperty=index" [formGroupName]="$indexProperty">  
-                      <td> {{ property.controls.abbreviation.value }} </td>
-                      <td> 
-                        <mat-form-field fxLayoutAlign="center">
-                          <input matInput placeholder="Valor" formControlName="value" required>
-                        </mat-form-field> 
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-                <td>
-                  <mat-form-field fxLayoutAlign="center">
-                    <input matInput type="number" min="0" placeholder="Cantidad" formControlName="quantity" required>
-                  </mat-form-field>
-                </td>  
-                <td>
-                  <mat-form-field>
-                    <input matInput placeholder="Precio de compra" formControlName="purchasePrice" type="number" min="0" required>
-                    <span matPrefix>S/.&nbsp;</span>
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field>
-                    <input matInput [matDatepicker]="dp3" formControlName="dueDate" placeholder="Fecha de vencimiento">
-                    <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
-                    <mat-datepicker #dp3 disabled="false"></mat-datepicker>
-                  </mat-form-field>
-                </td>               
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <table formArrayName="listDetail" style="width: 100%">
+          <thead>
+            <th colspan="1"></th>              
+            <th align="tex-center">Producto</th>
+            <th align="tex-center">Propiedades</th>
+            <th align="tex-center">Cantidad</th>
+            <th align="tex-center">Precio de compra</th>
+            <th align="tex-center">Fecha de vencimiento</th>                            
+          </thead>
+          <tbody>
+            <tr *ngFor="let detail of form['controls'].listDetail['controls']; let $index=index" [formGroupName]="$index">
+              <td>
+                <button  *ngIf="title != operationView" mat-icon-button (click)="deleteDetail($index)" matTooltip="Eliminar">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+              <td> {{ detail.controls.name.value }} </td>
+              <td>
+                <table formArrayName="listDetailProperty">
+                  <tr *ngFor="let property of detail['controls'].listDetailProperty['controls']; let $indexProperty=index" [formGroupName]="$indexProperty">  
+                    <td> 
+                      <mat-form-field fxLayoutAlign="center">
+                        <input matInput placeholder="{{ property.controls.name.value }}" formControlName="value" required>
+                      </mat-form-field> 
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <mat-form-field fxLayoutAlign="center">
+                  <input matInput type="number" min="0" placeholder="Cantidad" formControlName="quantity" required>
+                </mat-form-field>
+              </td>  
+              <td>
+                <mat-form-field>
+                  <input matInput placeholder="Precio de compra" formControlName="purchasePrice" type="number" min="0" required>
+                  <span matPrefix>S/.&nbsp;</span>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field>
+                  <input matInput [matDatepicker]="dp3" formControlName="dueDate" placeholder="Fecha de vencimiento">
+                  <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                  <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+                </mat-form-field>
+              </td>               
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </mat-card-content>
-    <mat-card-actions fxLayoutAlign="end">
-      <div *ngIf="title != operationView">
-        <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid" >{{title}}</button>
-      </div>  
-      <button mat-button>CANCELAR</button>
-    </mat-card-actions>
     <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
-  </form>
-</mat-card>
+  </mat-card>
+</form>

@@ -17,6 +17,7 @@ import { EntryMaintenanceModule } from '../../entry/entry-maintenance/entry-main
 import { CashSearchModule } from '../../cash/cash-search/cash-search.module';
 import { SaleSearchModule } from '../../sale/sale-search/sale-search.module';
 import { CashOpenCloseModule } from '../../cash/cash-open-close/cash-open-close.module';
+import { GlobalParametersSearchModule } from '../../global-parameters/global-parameters-search/global-parameters-search.module';
 
 const routes: Routes = [
   {
@@ -70,6 +71,10 @@ const routes: Routes = [
       {
         path:'colletSale',
         loadChildren:'./../../cash/cash-open-close/cash-open-close.module#CashOpenCloseModule'
+      }, 
+      {
+        path:'globalParametersSearch',
+        loadChildren:'./../../global-parameters/global-parameters-search/global-parameters-search.module#GlobalParametersSearchModule'
       }
     ]
   },

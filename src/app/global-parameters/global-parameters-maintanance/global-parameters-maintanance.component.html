@@ -1,0 +1,35 @@
+<h3 mat-dialog-title color="primary">PARAMETROS GLOBALES-{{title}}</h3>
+<mat-dialog-content>
+  <form [formGroup]="form" >
+    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+      <div fxFlex="33%" >
+        <mat-form-field fxFlex="90">
+          <input matInput placeholder="IGV" type="number" min=0 formControlName="IGV" required>
+          <span matSuffix>%</span>
+          <mat-error>Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="33%" >
+        <mat-form-field fxFlex="90">
+          <input matInput placeholder="Porcentaje minimo por mayor" type="number" min=0 formControlName="percentageMinWholesalePrice" required>
+          <span matSuffix>%</span>
+          <mat-error>Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="33%" >
+        <mat-form-field fxFlex="90">
+          <input matInput placeholder="Porcentaje minimo por menor" type="number" min=0 formControlName="percentageMinRetailPrice" required>
+          <span matSuffix>%</span>
+          <mat-error>Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
+  </form>      
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <div *ngIf="title != operationView">
+    <button mat-raised-button color="primary" mat-dialog-close (click)="save()" [disabled]="!form.valid" >{{title}}</button>
+  </div>  
+  <button mat-button [mat-dialog-close]="true">CANCELAR</button>
+</mat-dialog-actions>
