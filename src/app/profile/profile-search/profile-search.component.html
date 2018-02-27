@@ -1,8 +1,8 @@
 <form [formGroup]="form">
   <mat-card>
-    <mat-card-title>
+    <mat-card-title> 
       <div fxLayout="row" fxLayout.xs="column">
-        <div fxFlex="50%"  fxFlex.xs="50%"> CATEGORIA - BUSQUEDA </div>
+        <div fxFlex="50%"  fxFlex.xs="50%"> PERFIL - BUSQUEDA </div>
         <div fxFlex="50%" fxFlex.xs="50%" fxLayoutAlign="end center">
           <div [hidden]="!validateSession(actionEdit)">
             <button mat-raised-button color="primary" (click)="addItem()"> <mat-icon>plus_one</mat-icon> NUEVO</button>                
@@ -12,42 +12,36 @@
     </mat-card-title>
     <mat-card-content>
       <div fxLayout="row" fxLayout.xs="column">
-        <mat-form-field >
-          <input matInput type="text" placeholder="Nombre" formControlName="name" (keyup)="applyFilter($event.target.value)">
-        </mat-form-field>
-      </div>
-      <div fxLayout="row">
         <diV fxFlex="100%">
-          <mat-table #table [dataSource]="dataSource" matSort>                  
+          <mat-table #table [dataSource]="dataSource">                  
             <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+              <mat-header-cell *matHeaderCellDef> Perfil </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="button">
               <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
               <mat-cell *matCellDef="let element" fxLayoutAlign="end">
-                <button mat-icon-button (click)="viewItem(element)" matTooltip="Ver">
+                <button mat-icon-button (click)="viewItem(element)"  matTooltip="Ver">
                   <mat-icon>visibility</mat-icon>
                 </button>
                 <div [hidden]="!validateSession(actionEdit)">                       
-                  <button mat-icon-button (click)="updateItem(element)" matTooltip="Modificar">
+                  <button mat-icon-button (click)="updateItem(element)" matTooltip="Modificar" >
                     <mat-icon>mode_edit</mat-icon>
                   </button>
-                </div>
-                <div [hidden]="!validateSession(actionEdit)">                                         
+                </div> 
+                <div [hidden]="!validateSession(actionEdit)"> 
                   <button mat-icon-button (click)="deleteItem(element)" matTooltip="Eliminar">
                     <mat-icon>delete</mat-icon>
                   </button>
-                </div>
+                </div>  
               </mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           </mat-table>
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
         </diV>
       </div>                      
     </mat-card-content>        
   </mat-card>
-  <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing> 
+  <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
 </form>

@@ -5,6 +5,7 @@ export class ENEntry
     idSupplier: number;
     entryType: string;
     date: Date;
+    dateYMD: string;
     idCategory: number;
     idProduct: number;
 }

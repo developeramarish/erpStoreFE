@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders  } from '@angular/common/htt
 import { CoreProvider } from './../../core/provider/coreProvider';
 import { Parent } from  './../../core/class/Parent';
 import { Inject} from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, NativeDateAdapter, DateAdapter } from '@angular/material';
 import { ENEntry } from '../entry-class/ENEntry';
 import { ENResult } from '../../core/class/ENResult';
 import { Router } from '@angular/router';
@@ -22,6 +22,7 @@ import { ProductProvider } from '../../product/product-provider/productProvider'
 import { ENProduct } from '../../product/product-class/ENProduct';
 import { ProductMaintenanceComponent } from '../../product/product-maintenance/product-maintenance.component';
 import { ENProductProperty } from '../../product/product-class/ENProductProperty';
+import { ENEntryDetailProperty } from '../entry-class/ENEntryDetailProperty';
 
 @Component({
   selector: 'itcusco-entry-maintenance',
@@ -33,6 +34,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   listStore: Array<ENStore>;
   listSupplier: Array<ENSupplier>;
   listDetail: Array<ENEntryDetail> = [];
+  listDetailDelete: Array<ENEntryDetail> = [];  
   listDetailProperty: Array<ENProductProperty> = [];
   listCategory: Array<ENCategory>;
   listProduct: Array<ENProduct>;
@@ -48,6 +50,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     private categoryProvider: CategoryProvider,
     private productProvider: ProductProvider,
     public dialog: MatDialog,
+    dataAdapter: DateAdapter<NativeDateAdapter>
   ) 
   { 
     super(); 
@@ -56,6 +59,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     if (!this.validateSession(this.actionEdit)){
       this.router.navigate(['/']);
     } 
+    dataAdapter.setLocale('es-PE');
   }
 
   ngOnInit() {
@@ -75,8 +79,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         break;
       default: 
         this.disabledEdit= true;
-    }    
-    this.showProcessing = true;
+    }  
     this.buildForm();  
     this.disabledSource();
 
@@ -97,6 +100,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
       temp = new ENEntry();
       temp.idEntry = 0;
       temp.date = new Date();
+      temp.dateYMD = this.getDateNowYMD();
     }
     this.form = this.formBuilder.group({
       idEntry: [temp.idEntry],
@@ -113,7 +117,7 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         disabled: this.disabledEdit
       }, Validators.required],
       date:[{
-        value: temp.date,
+        value: this.getDateOfStringYMD(temp.dateYMD),
         disabled: this.disabledEdit
       }, Validators.required],
       idCategory:[{
@@ -132,7 +136,6 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         this.showProcessing = false;
         if((<ENResult>data).code == 0){
           var listDetail: Array<ENEntryDetail> = <Array<ENEntryDetail>>(<ENResult>data).result;
-          alert(JSON.stringify(listDetail));
           const control = <FormArray>this.form.controls['listDetail'];
           for (var i =0; i<listDetail.length; i++){
             let disabledPerishable: Boolean = this.disabledEdit || !listDetail[i].perishable;
@@ -140,6 +143,10 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
               this.formBuilder.group({
                 idEntry: [{
                   value: listDetail[i].idEntry, 
+                  disabled: this.disabledEdit
+                }],
+                idEntryDetail: [{
+                  value: listDetail[i].idEntryDetail, 
                   disabled: this.disabledEdit
                 }],
                 idProduct: [{
@@ -160,11 +167,41 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
                 }],          
                 dueDate: [{
                   value: listDetail[i].dueDate,
-                  disabled: disabledPerishable
+                  disabled: disabledPerishable  
                 }],
                 listDetailProperty: this.formBuilder.array([]),
               })
-            )
+            );
+            const controlProperty = <FormArray>control.at(i).get('listDetailProperty');
+            for (var j=0;j< listDetail[i].listDetailProperty.length; j++){
+              var temp: ENEntryDetailProperty = <ENEntryDetailProperty>listDetail[i].listDetailProperty[j];
+              controlProperty.push(this.formBuilder.group({
+                idEntry: [{
+                  value: temp.idEntry, 
+                  disabled: this.disabledEdit
+                }],
+                idEntryDetail: [{
+                  value: temp.idEntryDetail, 
+                  disabled: this.disabledEdit
+                }],
+                idProduct: [{
+                  value: temp.idProduct,
+                  disabled: this.disabledEdit
+                }],
+                idProperty: [{
+                  value: temp.idProperty,
+                  disabled: this.disabledEdit
+                }],
+                name: [{
+                  value: temp.name,
+                  disabled: this.disabledEdit
+                }],
+                value: [{
+                  value: temp.value,
+                  disabled: this.disabledEdit
+                }],
+              }));
+            }
           }
         }
         else{
@@ -191,16 +228,17 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
         idSupplier: tempIdSupplier,
         entryType: this.form.value.entryType,
         date: this.form.value.date,
-        listDetail: this.form.value.listDetail     
+        listDetail: this.form.value.listDetail,
+        listDetailDelete: this.listDetailDelete                  
       };
       if (this.title == this.operationUpdate){
         url = this.coreProvider.getUrlBackEnd() + 'PREntry/update'; 
       }else{
         url = this.coreProvider.getUrlBackEnd() + 'PREntry/insert';   
         delete info.id;
+        delete info.listDetailDelete;
       }  
       body = JSON.stringify(info);
-      alert(body);
     }
     if (this.title == this.operationDelete){
       url = this.coreProvider.getUrlBackEnd() + 'PREntry/delete';    
@@ -211,19 +249,17 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
     const headers = new HttpHeaders().
     set('Content-Type', 'application/json; charset=utf-8');    
     this.http.post<ENResult>(url, body, {headers: headers}).
-      subscribe(data => {
-        this.showProcessing = false;
-        if (data.code == 0){
-          this.coreProvider.showMessageOK();
-          this.router.navigate(['home/entrySearch']); 
-        }else{
-          this.coreProvider.showMessageError(data.message);
-        }
-      },
-      (err) => {        
-        this.coreProvider.showMessageErrorUnexpected();        
+    subscribe(data => {
+      this.showProcessing = false;
+      if (data.code == 0){
+        this.coreProvider.showMessageOK();
+        this.router.navigate(['home/entrySearch']); 
       }
-      );
+      else
+      { this.coreProvider.showMessageError(data.message); }
+    },
+    (err) => { this.coreProvider.showMessageErrorUnexpected();}
+    );
   }
 
   getStore(controlProcessing: boolean): void{
@@ -336,9 +372,10 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
           quantity:  ['', Validators.required],
           purchasePrice:  ['', Validators.required],
           dueDate:[{ 
-            value: null, 
+            value: '', 
             disabled: this.disabledEdit || !tempProduct.perishable
           }],
+          dueDateYMD:[ this.getDateNowYMD()],
           listDetailProperty: this.formBuilder.array([]),
         }));
         this.getProductProperty(this.form.value.idProduct);
@@ -364,11 +401,11 @@ export class EntryMaintenanceComponent extends Parent implements OnInit {
   deleteDetail(index): void
   {
     const control = <FormArray>this.form.controls['listDetail'];         
-    //if (control.at(index).get('idProperty').value > 0)
-    //{
-      //this.listDetailPropertyDelete.push(control.at(index).value);
+    if (control.at(index).get('idEntryDetail').value > 0)
+    {
+      this.listDetailDelete.push(control.at(index).value);
       control.removeAt(index);
-    //}
+    }
   }
 
   getCategory(controlProcessing: boolean): void{

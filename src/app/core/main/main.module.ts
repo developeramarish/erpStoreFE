@@ -75,7 +75,23 @@ const routes: Routes = [
       {
         path:'globalParametersSearch',
         loadChildren:'./../../global-parameters/global-parameters-search/global-parameters-search.module#GlobalParametersSearchModule'
-      }
+      },
+      {
+        path:'userSearch',
+        loadChildren:'./../../user/user-search/user-search.module#UserSearchModule'
+      },
+      {
+        path:'changePasswordMaintenance',
+        loadChildren:'./../../user/user-change-password/user-change-password.module#UserChangePasswordModule'
+      },
+      {
+        path:'profileSearch',
+        loadChildren:'./../../profile/profile-search/profile-search.module#ProfileSearchModule'
+      },
+      {
+        path:'',
+        loadChildren:'./../../profile/profile-maintenance/profile-maintenance.module#ProfileMaintenanceModule'
+      },
     ]
   },
 ]

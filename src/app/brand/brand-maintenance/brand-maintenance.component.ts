@@ -23,7 +23,7 @@ export class BrandMaintenanceComponent extends Parent implements OnInit {
     private http: HttpClient, 
     private coreProvider: CoreProvider
   ) 
-  { super(); }
+  { super() }
 
   ngOnInit() {
     this.title = this.data["operation"];

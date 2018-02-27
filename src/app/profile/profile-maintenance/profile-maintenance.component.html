@@ -1,0 +1,53 @@
+<form [formGroup]="form" >
+  <mat-card>
+      <mat-card-title>
+        <div fxLayout="row" fxLayout.xs="column">
+          <div fxFlex="50%"  fxFlex.xs="100%">
+            PERFIL - {{title}}
+          </div>
+          <div fxFlex="50%" fxFlex.xs="100%" fxLayoutAlign="end center">
+            <div *ngIf="title != operationView">
+              <button mat-raised-button color="primary" (click)="save()" [disabled]="!form.valid">{{title}}</button>&nbsp;&nbsp;
+            </div>  
+            <button mat-button (click)="back()">CANCELAR</button>
+          </div>
+        </div>
+      </mat-card-title>
+    <mat-card-content>
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center">
+        <mat-form-field fxFlex="70">
+          <input matInput type="text" placeholder="Nombre" formControlName="name" required>
+          <mat-error> Ingrese algún valor</mat-error> 
+        </mat-form-field>   
+      </div>
+      <div fxLayout="row">
+        <diV fxFlex="100%">
+          <mat-table #table [dataSource]="dataSource" matSort>     
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox> 
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row" fxFlex="10%">      
+                <mat-checkbox (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+              </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Acción </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </diV>
+      </div>                      
+    </mat-card-content>        
+  </mat-card>
+  <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
+</form>

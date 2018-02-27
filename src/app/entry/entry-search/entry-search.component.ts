@@ -76,7 +76,6 @@ export class EntrySearchComponent extends Parent implements OnInit {
   }
 
   viewItem(item){
-    alert(JSON.stringify(item));
     this.router.navigate(['home/entryMaintenance']); 
     localStorage.setItem("entryOperation", this.operationView);
     localStorage.setItem("entry", JSON.stringify(item));

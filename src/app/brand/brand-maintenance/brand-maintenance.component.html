@@ -2,14 +2,10 @@
 <mat-dialog-content>
   <form [formGroup]="form" >
     <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
-      <div fxFlex="100%" >
-        <mat-form-field style="width: 100%">
-          <input matInput placeholder="Nombre" maxlength="100" formControlName="name" required>
-        </mat-form-field>
-        <mat-error *ngIf="form.controls['name'].hasError('name')">
-          Ingrese algún valor
-        </mat-error>
-      </div>
+      <mat-form-field style="width: 100%">
+        <input matInput placeholder="Nombre" maxlength="100" formControlName="name" required>
+        <mat-error>Ingrese algún valor</mat-error>
+      </mat-form-field>
     </div>
     <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
   </form>      

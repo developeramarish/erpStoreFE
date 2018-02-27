@@ -1,0 +1,77 @@
+<h3 mat-dialog-title color="primary">USUARIO - {{title}}</h3>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+      <div fxFlex="50%">
+        <mat-form-field style="width: 90%">
+          <input matInput placeholder="Usuario" maxlength="50" formControlName="userName" required>
+          <mat-error>Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%" *ngIf="!disabledEdit">
+        <mat-form-field style="width: 90%">
+          <input matInput placeholder="Contraseña" maxlength="16" formControlName="password" type="password">
+          
+          <mat-error>Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+      <div fxFlex="50%" fxLayout.xs="100%">
+        <mat-form-field style="width: 80%">
+          <mat-select placeholder="Tienda" formControlName="idStore" name="store" required>
+            <mat-option *ngFor="let store of listStore" [value]="store.idStore">
+              {{ store.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error> Ingrese algún valor</mat-error>
+        </mat-form-field>
+        <div *ngIf="!disabledEdit">
+          <button mat-icon-button (click)="getStore(true)" matTooltip="Actualizar Tiendas">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button mat-icon-button (click)="addStore()" matTooltip="Agregar Tienda" >
+            <mat-icon>plus_one</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div fxFlex="50%" fxLayout.xs="100%">
+        <mat-form-field style="width: 80%">
+          <mat-select placeholder="Perfil" formControlName="idProfile" name="profile" required>
+            <mat-option *ngFor="let profile of listProfile" [value]="profile.idProfile">
+              {{ profile.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error> Ingrese algún valor</mat-error>
+        </mat-form-field>
+        <div *ngIf="!disabledEdit">
+          <button mat-icon-button (click)="getProfile(true)" matTooltip="Actualizar Tiendas">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column">
+      <div fxFlex="50%">
+        <mat-form-field style="width: 90%">
+          <input matInput placeholder="Nombre" maxlength="100" formControlName="name" required>
+          <mat-error>Ingrese algún valor</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50%">
+        <mat-form-field style="width: 90%">
+          <input matInput placeholder="Apellidos" maxlength="100" formControlName="lastname" required>
+          <mat-error>Ingrese algún valor</mat-error>          
+        </mat-form-field>
+      </div>
+    </div>
+    <itcusco-processing [showProcessing]="showProcessing"></itcusco-processing>
+  </form>      
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <div *ngIf="title != operationView">
+    <button mat-raised-button color="primary" mat-dialog-close (click)="save()" [disabled]="!form.valid && title!=operationDelete">{{title}}</button>
+  </div>  
+  <button mat-button [mat-dialog-close]="true">CANCELAR</button>
+</mat-dialog-actions>

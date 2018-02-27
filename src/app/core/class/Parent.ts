@@ -23,4 +23,37 @@ export class Parent{
         }
         return flag;
     }
+
+    getDateOfStringYMD(strFechaYMD: string): Date {
+        var array = strFechaYMD.split('-');
+        return new Date(parseInt(array[0]), parseInt(array[1])-1, parseInt(array[2]));
+    }
+
+    getDateNowYMD(): string {
+        var today = new Date();
+        var dd:string = String(today.getDate());
+        var mm:string = String(today.getMonth()+1); //January is 0!
+        var yyyy:string = String(today.getFullYear());    
+        if(dd.length == 1) {
+            dd = '0'+dd;
+        }     
+        if(mm.length == 1) {
+            mm = '0' + mm;
+        }
+        return yyyy + '-' + mm + '-' + dd;
+      }
+
+      getDateNowDMY(): string {
+        var today = new Date();
+        var dd:string = String(today.getDate());
+        var mm:string = String(today.getMonth()+1); //January is 0!
+        var yyyy:string = String(today.getFullYear());    
+        if(dd.length == 1) {
+            dd = '0'+dd;
+        }     
+        if(mm.length == 1) {
+            mm = '0' + mm;
+        }
+        return mm + '-' + dd + '-' + yyyy;
+      }
 }

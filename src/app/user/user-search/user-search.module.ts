@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GlobalParametersSearchComponent } from './global-parameters-search.component';
-import { GlobalParametersMaintananceComponent } from '../global-parameters-maintanance/global-parameters-maintanance.component';
-import { GlobalParametersMaintananceModule } from '../global-parameters-maintanance/global-parameters-maintanance.module';
+import { UserSearchComponent } from './user-search.component';
+import { UserMaintenanceComponent } from '../user-maintenance/user-maintenance.component';
+import { UserMaintenanceModule } from '../user-maintenance/user-maintenance.module';
 import { SharedModule } from '../../core/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from '../../core/class/token.interceptor';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {  MatButtonModule, 
           MatCardModule, 
@@ -14,19 +15,21 @@ import {  MatButtonModule,
           MatIconModule,
           MatInputModule,
           MatTooltipModule,
-          MatTableModule } from '@angular/material';
+          MatTableModule,
+          MatPaginatorModule,
+          MatSortModule} from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { RouterModule, Routes } from '@angular/router';
-import { TokenInterceptor } from '../../core/class/token.interceptor';
 
 const routes: Routes = [
-  { path: '', component: GlobalParametersSearchComponent }
+  { path: '', component: UserSearchComponent }
 ];
+
 
 @NgModule({
   imports: [
     CommonModule,
-    GlobalParametersMaintananceModule,
+    UserMaintenanceModule,
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
@@ -38,13 +41,15 @@ const routes: Routes = [
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatTooltipModule,
     MatTableModule, 
     CdkTableModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [GlobalParametersSearchComponent],
-  entryComponents: [GlobalParametersMaintananceComponent],
+  declarations: [UserSearchComponent],
+  entryComponents: [UserMaintenanceComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -53,4 +58,4 @@ const routes: Routes = [
     }
   ]
 })
-export class GlobalParametersSearchModule { }
+export class UserSearchModule { }
